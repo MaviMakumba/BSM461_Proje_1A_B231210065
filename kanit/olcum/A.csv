@@ -1,0 +1,3 @@
+﻿"tarih","kisi","bilesen","olcum","deger","birim","tekrar","veri_boyutu","makine","not"
+"2026-11-23","A","Z2","json_toplam_boyut","430607335","bayt","1","3000000 olay","DESKTOP-FL051RK","S3 ham/iot/tarih= altindaki 14 JSONL nesnesinin Size toplami"
+"2026-11-23","A","Z2","parquet_toplam_boyut","45234399","bayt","1","3000000 ham olay; temizleme sonrasi","DESKTOP-FL051RK","S3 islenmis/iot/ altindaki 112 Parquet dosyasinin Size toplami"
