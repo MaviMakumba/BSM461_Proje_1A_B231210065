@@ -132,8 +132,35 @@ okuyan doğru anlar. Farklı bölümlerde "20" önce okunabilir ve "alarm sürü
   başka programlar ve tekrar kopyalarının aynı bölüme düşmesi.
 - *S: Tek bir sensör çok yoğun gönderirse?* → C: O bölüm ısınır. Çözümü anahtara rastgele bir ek koymak (tuzlama); bedeli o sensörün sırasının kaybı.
 
-### 5.3 acks / idempotent (K-07)
-[ölçüm sürüyor — eklenecek]
+### 5.3 Üretici onayı: acks=all + idempotent (K-07)
+**Benzetme:** Gerçek Kafka'da aynı mektubun kopyasını tutan birkaç şube var. `acks` = "mektubu bıraktıktan sonra ne zaman 'tamam' diyeyim?"
+- `acks=0`: kapıya atıp gidiyorum, makbuz yok → kaybolsa haberim olmaz.
+- `acks=1`: ana şube makbuz veriyor, kopyalar henüz yok → ana şube o an yanarsa mektup gider.
+- `acks=all`: makbuzu ancak bütün şubeler kopyayı alınca veriyorlar → en güvenli, biraz bekletir.
+- **Idempotent:** Makbuz yolda kaybolup mektubu tekrar atarsam postane sıra numarasından aynı mektup olduğunu anlar, ikincisini almaz.
+
+**Gerekçe:** "Kartımızda kayıp sınırı %0,1; gerçek sistemde bir Kafka sunucusu çökerse yalnızca bütün kopyaları yazılmış mesajı onaylatmak
+kaybı önler. Kitte tek sunucu olduğu için bu güvencenin bedeli ölçülemedi: dört ayar arasında fark %1,6'nın altında kaldı."
+
+| Ayar | Saniyede gönderilen (3 tekrar) | Çift mesaj |
+|---|---|---|
+| all + idempotent | 48.623 | %0,2 |
+| all, idempotent kapalı | 48.272 | %0,2 |
+| 1 | 47.839 | %0,2 |
+| 0 | 48.355 | %0,2 |
+
+**Neden fark yok:** (1) Kitte tek şube (tek Kafka sunucusu) → "hepsini bekle" = "ana şubeyi bekle". (2) Yavaş olan mektubu yazan
+(Python üreticisi), postane değil. (3) Ağ sorunu olmadı → tekrar gönderim yok → idempotentin düzelteceği bir şey yok.
+
+**Beklenmedik bulgu (kırılma):** Tepenin ~25 katında (100.000/s) 24 çalıştırmanın 4'ünde üretici `Queue full` ile çöktü ve elindeki
+100.000 mesaj kayboldu. Postane bir an yavaşladı, çanta taştı. Bu kaybı acks önleyemez, çünkü mesajlar postaneye hiç ulaşmamıştı.
+
+**Soru-cevap:**
+- *S: Ölçümde fark yoksa faydasını nereden biliyorsun?* → C: Kırılma deneyinde Kafka'yı yazma sırasında durdurup acks=0 ile acks=all'da
+  kaybı saydım. [B8 sonucu eklenecek]
+- *S: acks=all kaybı tamamen önler mi?* → C: Hayır. Henüz gönderilmemiş, üreticinin kuyruğunda bekleyen mesajları korumaz (Queue full bulgusu).
+- *S: Bedeli ne?* → C: Gerçek sistemde her mesajda en yavaş kopyayı beklemek, yani gecikme. Bir kopya düşerse yazma reddedilir:
+  kullanılabilirlik yerine tutarlılığı seçmiş oluyoruz.
 
 ## 6. A1 — normal dışı sensör (B3)
 [doldurulacak]

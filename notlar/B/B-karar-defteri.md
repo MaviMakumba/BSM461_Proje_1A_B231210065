@@ -137,13 +137,33 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   - *"Sıcak sensör olursa?"* → Bir sensör çok yoğun gönderirse bölümü ısınır; çözümü tuzlama (sensor_id + rastgele ek),
     bedeli sensör başına sıranın kaybı. (Z3 C'de; C'nin ölçümüyle bağlanacak.)
 
+### K-07 · Üretici: **`acks=all` + idempotent açık** — `KARAR` (B2, 24 Kas)
+- **Bağlam:** `acks` üreticinin bir mesajı ne zaman "yazıldı" sayacağını belirler. `0` = onay beklemez · `1` = yalnızca lider bölüm
+  yazınca · `all` = bütün eşzamanlı kopyalar (ISR) yazınca. Idempotent üretici, ağ hatasında yeniden gönderilen mesajın
+  ikinci kez yazılmasını üretici kimliği + sıra numarasıyla engeller (bölüm içi sırayı da korur).
+- **Ölçüm (B2 ölçümleri §4):** Dört ayarın hızı 47.839–48.623 olay/s → fark %1,6'nın altında, anlamlı değil. Tekrar her ayarda ~%0,2.
+- **Alternatifler:** **all + idempotent** · `1` (lider çökerse ve kopyalanmamışsa kayıp) · `0` (sessiz kayıp; en hızlı).
+- **Seçim (Eren):** all + idempotent açık. **Gerekçe cümlesi asistan taslağıdır, Eren okuyup kabul etti (YZ beyanına yazılacak):**
+  *"Kartımızda kayıp sınırı %0,1; gerçek sistemde bir Kafka sunucusu çökerse yalnızca bütün kopyaları yazılmış mesajı onaylatmak
+  kaybı önler. Kitte tek sunucu olduğu için bu güvencenin bedeli ölçülemedi: dört ayar arasında fark %1,6'nın altında kaldı."*
+- **Bedeli (gerçek sistemde):** Her mesaj için en yavaş kopyanın yazmasını beklemek → gecikme artar. `min.insync.replicas=2` ile
+  birlikte kullanılır; kopyalardan biri düşerse yazma reddedilir (C'yi A'ya tercih: tutarlılık > kullanılabilirlik).
+- **Neden fark çıkmadı (hoca sorarsa):** (1) Kitte replika 1 → `all` = `1`. (2) Darboğaz Python üreticisi (CPU), Kafka değil.
+  (3) Ağ hatası yok → yeniden deneme yok → idempotentin düzelteceği bir şey yok.
+- **Faydasını gösterme planı → B8:** Üretim sürerken Kafka'yı durdur/başlat; aynı deneyi `--acks 0` ve `--acks all` ile yap → kaybolan
+  mesaj sayısını karşılaştır. Ayrıca `Queue full` çökmesi (100.000 mesaj kaybı) Z11 satırı.
+- **Hoca sorarsa:**
+  - *"Idempotent açıkken neden tekrar var?"* → B1 bulgu 3: tekrarlar uygulama düzeyinde (iki ayrı `send`).
+  - *"acks=all neden yavaşlatmadı?"* → yukarıdaki üç neden.
+  - *"acks=all mesaj kaybını tamamen önler mi?"* → Hayır. Üreticinin yerel kuyruğundaki, henüz gönderilmemiş mesajları korumaz
+    (Queue full bulgusu); uygulama hatayı yakalayıp beklemeli/yeniden denemeli.
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
 
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
-| K-07 | `acks=all` + idempotent üretici | B2 | `--acks 1` / `--idempotent-kapali` ile hız + tekrar farkı |
 | K-08 | Trigger süresi (5 s uyarı) | B3 | batch süresi < trigger mı; uçtan uca gecikme |
 | K-09 | A1 yöntemi: olay bazlı filtre ↔ pencere | B3 | uyarı gecikmesi |
 | K-10 | A2 yöntemi: durumlu (state) ↔ pencere + `sensorler.csv` | B4 | yanlış alarm (geç veri ↔ susma) |
@@ -241,7 +261,7 @@ arabelleği doluyor ve uygulama bunu yakalamıyor → kayıp. acks ayarı bunu �
 4. 5 s uyarıyı 2 dk geç veriyle nasıl bağdaştırdınız? → K-08, K-09
 5. Ağ kopan sensör ile susan sensörü nasıl ayırıyorsunuz? → K-10
 6. Teslim garantiniz ne, nasıl kanıtladınız? → K-14
-7. `acks=all` ne sağlıyor, bedeli ne? → K-07
+7. `acks=all` ne sağlıyor, bedeli ne, neden ölçümde fark çıkmadı? → K-07
 8. Kafka çökerse ne oluyor? → B8
 9. Idempotent üretici açıkken neden tekrar var? → B1 bulgu 3
 10. Tekrarları hangi alanla ayıkladınız; olay kimliği var mı? → B1 bulgu 4, K-12
