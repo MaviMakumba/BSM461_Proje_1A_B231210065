@@ -1,4 +1,4 @@
-﻿SENARYO KARTI · grup B231210065 · şablon iot
+SENARYO KARTI · grup B231210065 · şablon iot
 ────────────────────────────────────────────────────────────────
 Sistem             bir sensör ağı
 Ortalama hız       saniyede 2.000 ölçüm
