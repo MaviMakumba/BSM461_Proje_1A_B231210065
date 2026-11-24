@@ -163,7 +163,40 @@ kaybı önler. Kitte tek sunucu olduğu için bu güvencenin bedeli ölçülemed
   kullanılabilirlik yerine tutarlılığı seçmiş oluyoruz.
 
 ## 6. A1 — normal dışı sensör (B3)
-[doldurulacak]
+
+### 6.1 "Normal dışı" ne demek? (K-09a, A ile ortak)
+**Kural:** Bir ölçüm, kendi bölgesinin **o saatteki** ortanca (medyan) değerinden, normal oynama payının **5 katından** fazla saparsa anomalidir.
+Eşikler 3 milyonluk geçmiş veriden bir kez hesaplandı (7 bölge × 24 saat × 3 ölçü). Akış ve toplu taraf aynı tabloyu kullanıyor.
+
+**Kendi cümlem:** "Normal değer bölgeye ve günün saatine göre değişiyor; bu tabanla 5 katlık eşikte alarm oranı k arttıkça sabit kaldı (%0,40),
+yani yalnızca gerçek sıçramaları yakalıyor. 3σ kuralı ise nemde hiç sıçrama yokken saniyede yaklaşık 5 sahte alarm üretiyordu."
+
+**Neden bölge ve saat?** Doğu Anadolu'nun ortalaması 11 °C, Akdeniz'inki 29 °C. Bölge içinde gece-gündüz farkı ~8 °C. Saat de hesaba
+katılınca normal oynama payı ±4 °C'den ±1 °C'ye iniyor, yani eşik 4 kat daha keskinleşiyor.
+
+**Plato testi (en güçlü kanıtım):** Alarmın hassasiyetini azaltıyorum (k=4→5→6). Alarm sayısı düşmeye devam ediyorsa yakaladığım şey gürültü,
+sabit kalıyorsa gerçek olay. Gerçek bir yangın, alarm az hassas olsa da alarmı çaldırır.
+
+| | k=4 | k=5 | k=6 |
+|---|---|---|---|
+| Titreşim | %0,402 | %0,399 | %0,399 → sabit, gerçek |
+| Sıcaklık (bölge + saat) | %0,400 | %0,399 | %0,399 → sabit, gerçek |
+| Sıcaklık (yalnız bölge) | %0,373 | %0,324 | %0,259 → düşüyor, günlük döngü karışıyor |
+| Nem | %0,005 | 0 | 0 → gerçek sıçrama yok |
+
+**Neden 3σ değil?** Normal dağılımda değerlerin ~%0,27'si zaten 3σ dışındadır. Nemde tam bu oranı buldum (%0,25), yani bunlar sahte alarm.
+Saniyede 2.000 ölçümde bu, saniyede ~5 sahte alarm eder (hesap). Her tostta çalan yangın alarmını kimse ciddiye almaz.
+
+**Neden ortalama değil medyan?** Dev sıçramalar ortalamayı ve oynama payını şişiriyor. Titreşimde ortalamayla hesaplanan oynama 0,17,
+gerçek oynama 0,05. Sıçramalar gerçek oynamanın ortalama 50 katı.
+
+**Yan bulgu (A'nın T2'si için):** TX-200 modeli diğer modellerden ~4 kat fazla anomali üretiyor (%1,12'ye karşı %0,30).
+
+**Soru-cevap:**
+- *S: Bu kural neyi kaçırır?* → C: 5 kattan küçük ama sürekli kayan (drift eden) bir sensörü. Bu bir sıçrama değil eğilimdir ve ayrı bir yöntem ister.
+- *S: Sensör başına eşik neden değil?* → C: Ölçtüm: aynı bölgedeki sensörler neredeyse aynı davranıyor; sensör ve bölge tabanı aynı oranı verdi
+  (%0,672 ↔ %0,675). Bölge daha basit (504 satıra karşı 600) ve açıklaması kolay.
+- *S: Akıştaki anomaliyle toplu tablodaki aynı mı?* → C: Evet, ikisi aynı eşik tablosunu okuyor.
 
 ## 7. A2 — susan sensör (B4)
 [doldurulacak]

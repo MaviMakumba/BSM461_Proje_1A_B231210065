@@ -158,6 +158,26 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   - *"acks=all mesaj kaybını tamamen önler mi?"* → Hayır. Üreticinin yerel kuyruğundaki, henüz gönderilmemiş mesajları korumaz
     (Queue full bulgusu); uygulama hatayı yakalayıp beklemeli/yeniden denemeli.
 
+### K-09a · "Normal dışı" tanımı = **bölge × günün saati tabanı, medyan ± 5 × dirençli ss** — `KARAR (B)`, A'nın onayı bekleniyor (B3, 24 Kas)
+- **Kural:** Bir ölçüm (sıcaklık, nem ya da titreşim), kendi bölgesinin o saatteki medyanından **5 × dirençli ss**'den fazla saparsa
+  anomalidir. Dirençli ss = 1,4826 × MAD. Eşik tablosu: 7 bölge × 24 saat × 3 ölçü = 504 satır, toplu veriden **bir kez** hesaplanır.
+  Akış (A1) ve toplu (T2) aynı tabloyu kullanır. Öneri: A yazar → `s3a://tablolar/iot_esik`, B okur. Saat = `olay_zamani`'nın saati (UTC); iki tarafta aynı.
+- **Ölçüm (B3 bulguları):** 3σ kuralı nemde sıçrama yokken %0,25 işaretliyor (≈ saniyede 5 sahte alarm, hesap). Plato testi:
+  k=4/5/6'da titreşim %0,402/0,399/0,399, sıcaklık (bölge×saat) %0,400/0,399/0,399 → gerçek sıçramalar. Yalnız bölge tabanında sıcaklıkta
+  plato yok (günlük ~8 °C döngü). Bölge×saat tabanı normal oynamayı ~4 kat daraltıyor (dss 3,96 → ~1,0 °C).
+- **Alternatifler:** (1) sensöre göre ort ± 3σ (%0,67) · (2) bölgeye göre ort ± 3σ (%0,68) · **(3) bölge×saat, dirençli, k=5 (%0,40)**.
+- **Seçim (Eren):** (3). **Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:**
+  *"Normal değer bölgeye ve günün saatine göre değişiyor; bu tabanla 5 katlık eşikte alarm oranı k arttıkça sabit kaldı (%0,40), yani
+  yalnızca gerçek sıçramaları yakalıyor. 3σ kuralı ise nemde hiç sıçrama yokken saniyede yaklaşık 5 sahte alarm üretiyordu."*
+- **Bedeli / sınırı:** 5 kattan küçük gerçek sapmaları kaçırır (ör. yavaş kayan, "drift" eden sensör). Bu tür bir arıza sıçrama değil eğilimdir,
+  ayrı bir yöntem ister (raporda sınırlılık). Eşik tablosu geçmişten hesaplandığı için mevsim değişince yeniden hesaplanmalı.
+  Sensör bazlı eşiğin "T2'yi eşitler" riski bu veride çıkmadı (sensör ≈ bölge: %0,672 ↔ %0,675).
+- **Hoca sorarsa:**
+  - *"Neden 3σ değil?"* → normal dağılımda 3σ dışı zaten ~%0,27'dir; nem tam bunu verdi → sahte alarm. Plato testi tablosu.
+  - *"Neden ortalama değil medyan?"* → sıçramalar ortalamayı ve ss'yi şişiriyor: titreşim klasik ss 0,17, gerçek oynama 0,05.
+  - *"Neden saat?"* → günlük ~8 °C döngü; saati katmazsak öğlen normal olan sıcaklık gece "normal" sayılır ya da tersi.
+  - *"Akıştaki anomali ile T2'deki aynı mı?"* → Evet, aynı eşik tablosu.
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
@@ -165,7 +185,7 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
 | K-08 | Trigger süresi (5 s uyarı) | B3 | batch süresi < trigger mı; uçtan uca gecikme |
-| K-09 | A1 yöntemi: olay bazlı filtre ↔ pencere | B3 | uyarı gecikmesi |
+| K-09b | A1 yöntemi: olay bazlı filtre ↔ pencere ↔ ikisi | B3 | uyarı gecikmesi (olay → çıktı) |
 | K-10 | A2 yöntemi: durumlu (state) ↔ pencere + `sensorler.csv` | B4 | yanlış alarm (geç veri ↔ susma) |
 | K-11 | Çıkış kipi (append/update) ve sink (Delta) | B5 | — |
 | K-12 | Tekrar ayıklama anahtarı (`dropDuplicates` + watermark) | B5 | önce/sonra sayım |
