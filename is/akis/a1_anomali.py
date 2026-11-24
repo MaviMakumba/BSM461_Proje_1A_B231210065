@@ -119,6 +119,8 @@ def asti(olcu):
 
 
 oran = (olay.join(F.broadcast(esik_genis), ["bolge", "saat"])
+        # üç ölçüsü de boş mesaj karşılaştırılamaz → paydaya girmesin (oranı yapay düşürmesin); kirli kayıt (Z10)
+        .where(F.col("sicaklik").isNotNull() | F.col("nem").isNotNull() | F.col("titresim").isNotNull())
         .withColumn("anomali", asti("sicaklik") | asti("nem") | asti("titresim"))
         .withWatermark("olay_zamani", a.watermark)
         .groupBy(F.window("olay_zamani", a.pencere), "sensor_id")
