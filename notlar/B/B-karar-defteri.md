@@ -250,6 +250,27 @@ arabelleği doluyor ve uygulama bunu yakalamıyor → kayıp. acks ayarı bunu �
 
 ---
 
+## B3 bulguları — "normal dışı" tanımı için veri analizi (24 Kas, toplu 3M olay / 14 gün, kanıt: `kanit/b3/anomali-kesif.txt`)
+
+Betik: `is/olcum/b3_anomali_kesif.py` (DuckDB, tekrarlar ayıklanmış, `sensorler.csv` ile birleştirilmiş). Kısaltma: dss = dirençli
+standart sapma = 1,4826 × MAD (medyan mutlak sapma). Uç değerlerden etkilenmez.
+
+| # | Bulgu (ölçülen) | Sonucu |
+|---|---|---|
+| 1 | **Sıcaklık bölgeye göre çok değişiyor** (ort. Doğu Anadolu 11,0 → Akdeniz 29,45 °C). Bölge içinde sensörler neredeyse aynı (sensör ortalamalarının ss'si ~0,6, sensör içi ss ~3,4) | Taban en az bölge olmalı; sensör ayrımı ek bilgi katmıyor |
+| 2 | **Sıcaklıkta günlük döngü var:** bölge içinde saatlik medyan ~8 °C oynuyor; bölge×saat tabanında dss 3,96 → **~1,0** | Taban bölge × saat olursa normal aralık 4 kat daralır |
+| 3 | **Nem bölgeye göre değişiyor** (43,5 → 64,9), dağılım dar ve düzgün (ss ~2,5). k=3'te %0,25, k=4'te %0,005, k=5'te **0** | Nemde gerçek sıçrama yok → **3σ ile çıkan nem "anomalileri" sahte alarm** (normal dağılımın kuyruğu) |
+| 4 | **Titreşim bölgeden bağımsız** (her yerde ~0,21); gerçek gürültü dss 0,05 ama klasik ss 0,17 (sıçramalar şişiriyor). Sıçramalar dev: medyan **50,8 dss** | Sıçramalar gürültüden çok net ayrılıyor |
+| 5 | **Plato testi:** k=4→5→6 artarken oran sabit kalıyorsa yakalanan şey gerçek sıçramadır. Titreşim 0,4017→0,3987→0,3986; sıcaklık (bölge×saat) 0,3999→0,3987→0,3987; sıcaklık (yalnız bölge) 0,373→0,324→0,259 (**plato yok**) | k=5 + bölge×saat tabanı gerçek olayları gürültüden ayırıyor |
+| 6 | **Toplam oran, ort ± 3σ:** genel taban %0,399 · bölge %0,675 · sensör %0,672 | Sensör ≈ bölge: korkulan "sensör eşiği T2'yi eşitler" bu veride **gerçekleşmedi**. TX-200 sensör eşiğinde de 1,39 |
+| 7 | **Model farkı veride açık:** k=5, bölge×saat → TX-200 sıcaklık %1,12, titreşim %1,13; diğer modeller %0,29–0,30 | A'nın T2'si için güçlü bir sinyal (A kendi sorgusuyla doğrulamalı) |
+| 8 | Kirli: 6.050 birebir tekrar; eksik alanlar sensor_id 1.215 · bolge 1.225 · sicaklik 1.184 · nem 1.231 · titresim 1.199; tip/zaman hatası 0 | C'nin Z10 tablosuna |
+
+**Sahte alarm hesabı (hesap, ölçüm değil):** Nemde 3σ kuralı normal verinin ~%0,25'ini işaretliyor. Saniyede 2.000 ölçümde bu ≈ **saniyede
+5 sahte alarm** eder. Uyarı sistemi gürültüye boğulur.
+
+---
+
 ## Önemli gözlemler (karar değil ama sorulabilir)
 - 2026-11-24 · Kit akış iskeleti trigger'ı konsolda 10 s, S3'te 30 s → kartın 5 s uyarısını karşılamaz.
 - 2026-11-24 · Kitte tek Kafka düğümü, replika 1 (`KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1`) → Z0 garanti tablosunda "kopya: 1, üretimde 3" satırı.
