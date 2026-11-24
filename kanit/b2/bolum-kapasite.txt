@@ -1,0 +1,32 @@
+[b2-p1 · tekrar 1] yığın sayısı=6 · olay/yığın=[20000, 20000, 20000, 20000, 20000, 17041] · süre ms=[3206, 803, 669, 667, 582, 962]
+[b2-p1 · tekrar 2] yığın sayısı=6 · olay/yığın=[20000, 20000, 20000, 20000, 20000, 17041] · süre ms=[603, 434, 447, 446, 434, 919]
+[b2-p1 · tekrar 3] yığın sayısı=6 · olay/yığın=[20000, 20000, 20000, 20000, 20000, 17041] · süre ms=[522, 418, 436, 520, 445, 1070]
+ÖZET b2-p1 yığın=20000
+  tekrar 1: ilk yığın 3206 ms · sonraki yığınlar ort 737 ms, maks 962 ms · işleme hızı 26348 olay/s
+  tekrar 2: ilk yığın 603 ms · sonraki yığınlar ort 536 ms, maks 919 ms · işleme hızı 36209 olay/s
+  tekrar 3: ilk yığın 522 ms · sonraki yığınlar ort 578 ms, maks 1070 ms · işleme hızı 33590 olay/s
+  ORTALAMA (3 tekrar): yığın süresi 617 ms · işleme hızı 32049 olay/s
+[b2-p3 · tekrar 1] yığın sayısı=6 · olay/yığın=[19999, 19999, 19999, 19999, 19998, 17047] · süre ms=[2836, 762, 508, 526, 433, 867]
+[b2-p3 · tekrar 2] yığın sayısı=6 · olay/yığın=[19999, 19999, 19999, 19999, 19998, 17047] · süre ms=[581, 444, 387, 339, 350, 813]
+[b2-p3 · tekrar 3] yığın sayısı=6 · olay/yığın=[19999, 19999, 19999, 19999, 19998, 17047] · süre ms=[456, 322, 338, 360, 330, 824]
+ÖZET b2-p3 yığın=20000
+  tekrar 1: ilk yığın 2836 ms · sonraki yığınlar ort 619 ms, maks 867 ms · işleme hızı 31344 olay/s
+  tekrar 2: ilk yığın 581 ms · sonraki yığınlar ort 467 ms, maks 813 ms · işleme hızı 41595 olay/s
+  tekrar 3: ilk yığın 456 ms · sonraki yığınlar ort 435 ms, maks 824 ms · işleme hızı 44638 olay/s
+  ORTALAMA (3 tekrar): yığın süresi 507 ms · işleme hızı 39192 olay/s
+[b2-p6 · tekrar 1] yığın sayısı=6 · olay/yığın=[19997, 19997, 19997, 19997, 19997, 17056] · süre ms=[3061, 743, 673, 541, 449, 887]
+[b2-p6 · tekrar 2] yığın sayısı=6 · olay/yığın=[19997, 19997, 19997, 19997, 19997, 17056] · süre ms=[524, 358, 358, 329, 336, 819]
+[b2-p6 · tekrar 3] yığın sayısı=6 · olay/yığın=[19997, 19997, 19997, 19997, 19997, 17056] · süre ms=[588, 393, 373, 344, 322, 822]
+ÖZET b2-p6 yığın=20000
+  tekrar 1: ilk yığın 3061 ms · sonraki yığınlar ort 659 ms, maks 887 ms · işleme hızı 29470 olay/s
+  tekrar 2: ilk yığın 524 ms · sonraki yığınlar ort 440 ms, maks 819 ms · işleme hızı 44111 olay/s
+  tekrar 3: ilk yığın 588 ms · sonraki yığınlar ort 451 ms, maks 822 ms · işleme hızı 43054 olay/s
+  ORTALAMA (3 tekrar): yığın süresi 516 ms · işleme hızı 38878 olay/s
+[b2-p12 · tekrar 1] yığın sayısı=6 · olay/yığın=[19994, 19995, 19995, 19993, 19992, 17072] · süre ms=[3415, 683, 498, 540, 489, 907]
+[b2-p12 · tekrar 2] yığın sayısı=6 · olay/yığın=[19994, 19995, 19995, 19993, 19992, 17072] · süre ms=[514, 334, 330, 315, 347, 803]
+[b2-p12 · tekrar 3] yığın sayısı=6 · olay/yığın=[19994, 19995, 19995, 19993, 19992, 17072] · süre ms=[437, 428, 360, 307, 473, 808]
+ÖZET b2-p12 yığın=20000
+  tekrar 1: ilk yığın 3415 ms · sonraki yığınlar ort 623 ms, maks 907 ms · işleme hızı 31135 olay/s
+  tekrar 2: ilk yığın 514 ms · sonraki yığınlar ort 426 ms, maks 803 ms · işleme hızı 45583 olay/s
+  tekrar 3: ilk yığın 437 ms · sonraki yığınlar ort 475 ms, maks 808 ms · işleme hızı 40845 olay/s
+  ORTALAMA (3 tekrar): yığın süresi 508 ms · işleme hızı 39188 olay/s

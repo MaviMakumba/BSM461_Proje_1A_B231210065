@@ -1,0 +1,14 @@
+20:56:05 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+20:56:07 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 2000 milliseconds, but spent 2435 milliseconds
+HAZIR — veri bekleniyor
+⚠ yığın 10: sensor-152 normal dışı · pencere 20:50 · oran %1.402 (3/214) · Kafka'dan 1.12 s sonra
+⚠ yığın 10: sensor-088 normal dışı · pencere 20:50 · oran %1.86 (4/215) · Kafka'dan 1.11 s sonra
+⚠ yığın 12: sensor-171 normal dışı · pencere 20:50 · oran %1.215 (3/247) · Kafka'dan 1.11 s sonra
+⚠ yığın 12: sensor-157 normal dışı · pencere 20:50 · oran %1.382 (3/217) · Kafka'dan 1.11 s sonra
+⚠ yığın 13: sensor-033 normal dışı · pencere 20:50 · oran %1.224 (3/245) · Kafka'dan 1.10 s sonra
+⚠ yığın 13: sensor-198 normal dışı · pencere 20:50 · oran %1.128 (3/266) · Kafka'dan 1.10 s sonra
+⚠ yığın 14: sensor-151 normal dışı · pencere 20:50 · oran %1.224 (3/245) · Kafka'dan 1.11 s sonra
+⚠ yığın 16: sensor-160 normal dışı · pencere 20:50 · oran %1.003 (3/299) · Kafka'dan 1.08 s sonra
+⚠ yığın 23: sensor-010 normal dışı · pencere 20:50 · oran %1.109 (5/451) · Kafka'dan 1.25 s sonra
+⚠ yığın 26: sensor-168 normal dışı · pencere 20:50 · oran %1.02 (5/490) · Kafka'dan 1.12 s sonra
+⚠ yığın 29: sensor-136 normal dışı · pencere 20:50 · oran %1.027 (6/584) · Kafka'dan 1.14 s sonra

@@ -1,0 +1,4 @@
+→ Kafka 'b2-acks-all-idemacik-v2r2' · acks=all · idempotent=açık
+→ Kafka 'b2-acks-all-idemacik-v2r2' konusuna saniyede ~100000 olay · geç oranı 0.15 (en fazla 2 dk) · Ctrl+C ile dur
+  97.335 olay gönderildi
+✓ toplam 975.411 olay

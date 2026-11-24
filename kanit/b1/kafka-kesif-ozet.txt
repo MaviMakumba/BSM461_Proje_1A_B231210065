@@ -1,0 +1,17 @@
+Toplam mesaj: 1171
+Bölüm dağılımı: {0: 402, 1: 351, 2: 418} · en dolu ÷ ortalama = 1.071
+Farklı anahtar (sensör) sayısı: 200
+Alanlar (kaç mesajda var): {'olay_zamani': 1171, 'sensor_id': 1170, 'bolge': 1171, 'sicaklik': 1171, 'nem': 1171, 'titresim': 1171}
+Bozuk JSON: 0 · eksik/boş alan: {'sensor_id': 1}
+  örnek kirli: bölüm 1 ofset 172 Kafka anahtarı='' → {"olay_zamani": "2026-11-24T18:13:47.305Z", "bolge": "Ege", "sicaklik": 22.48, "nem": 47.5, "titresim": 0.169}
+Alan tipleri: {('olay_zamani', 'str'): 1171, ('sensor_id', 'str'): 1170, ('bolge', 'str'): 1171, ('sicaklik', 'float'): 1171, ('nem', 'float'): 1171, ('titresim', 'float'): 1171}
+Gecikme ölçülen: 1171 · >5 s geç: 178 (%15.20) · en büyük gecikme: 119.8 s · medyan: 0.000 s
+Geç olayların dağılımı (30 s kovalar, alt sınır s): {30: 59, 60: 47, 90: 72}
+Birebir aynı mesaj (tekrar) grubu: 3 · fazladan kopya: 3
+  örnek tekrar: {"olay_zamani": "2026-11-24T18:13:46.304Z", "sensor_id": "sensor-035", "bolge": "Marmara", "sicaklik": 22.18, "nem": 45.6, "titresim": 0.238} → (bölüm, ofset, kafka_ms): [(1, 168, 1795544026304), (1, 169, 1795544026304)]
+  örnek tekrar: {"olay_zamani": "2026-11-24T18:12:09.703Z", "sensor_id": "sensor-176", "bolge": "Ege", "sicaklik": 22.34, "nem": 53.2, "titresim": 0.265} → (bölüm, ofset, kafka_ms): [(1, 175, 1795544028306), (1, 176, 1795544028306)]
+  örnek tekrar: {"olay_zamani": "2026-11-24T18:13:45.301Z", "sensor_id": "sensor-038", "bolge": "İç Anadolu", "sicaklik": 16.16, "nem": 55.8, "titresim": 0.24} → (bölüm, ofset, kafka_ms): [(2, 184, 1795544025301), (2, 185, 1795544025301)]
+(sensor_id, olay_zamani) aynı olan grup: 41 · bunlardan değerleri FARKLI olan: 38
+  örnek: ['{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-039", "bolge": "Karadeniz", "sicaklik": 15.14, "nem": 63.1, "titresim": 0.174}', '{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-039", "bolge": "Karadeniz", "sicaklik": 14.7, "nem": 58.6, "titresim": 0.248}']
+  örnek: ['{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-014", "bolge": "Marmara", "sicaklik": 21.9, "nem": 48.8, "titresim": 0.148}', '{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-014", "bolge": "Marmara", "sicaklik": 22.57, "nem": 49.2, "titresim": 0.222}']
+Aynı sensörde olay_zamani'nın Kafka sırasında geri gittiği mesaj: 144

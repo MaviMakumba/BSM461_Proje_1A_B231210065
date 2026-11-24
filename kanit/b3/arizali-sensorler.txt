@@ -1,0 +1,11 @@
+# Toplu 3M veride K-09a kuralıyla sıçrama oranı > %1 olan sensörler (sensor_id, oran %)
+sensor-050,2.387
+sensor-051,2.48
+sensor-052,2.681
+sensor-053,2.547
+sensor-054,2.334
+sensor-055,2.199
+sensor-056,2.446
+sensor-057,2.461
+sensor-058,2.086
+sensor-059,2.229
