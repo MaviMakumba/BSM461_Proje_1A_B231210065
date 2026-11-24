@@ -48,13 +48,51 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   hoca "akışta anomali dediğiniz ile toplu tablodaki anomali aynı mı?" diye sorar.
 - **Netleşecek (B3/B4, veriden):** "normal dışı" tanımı (sabit eşik mi, sensöre/bölgeye göre mi), "susmak" kaç dakika?
 
+**A'nın cevapları (24 Kas):**
+1. *Anomali eşiği:* A sensöre özel eşik öneriyor: her sensörün geçmişinden normal aralık bir kez hesaplanır, aynı eşik tablosu hem A1'de
+   hem T2'de kullanılır. → **Ortak eşik tablosu fikri iyi.** ⚠️ **Tuzak:** Eşik her sensörün *kendi* geçmişinden
+   (ör. kendi p99'u ya da ort ± 3σ) çıkarsa her sensör kendi oynaklığına göre normalleşir: gürültülü bir sensörün aralığı
+   geniş olur ve anomali oranları sensörler arasında yapay biçimde eşitlenir. T2'nin sorusu "hangi model ya da
+   kurulum yılı daha çok anomali üretiyor?" olduğu için bu eşitleme T2'yi anlamsızlaştırabilir. Alternatifler: bölge bazlı aralık
+   (iklim farkını kapsar, sensör farkını gizlemez) · sabit fiziksel sınırlar · sensör bazlı ama dirençli (medyan ± k·MAD).
+   **B3'te A ile birlikte ve veriye bakarak karar verilecek.** Eşik tablosu da sözleşmeye eklenecek (öneri: `s3a://tablolar/iot_esik`, A yazar, B okur).
+2. *Veri kaybı / susma:* A, `eksik / beklenen` oranını, sensörün aktif süresini beklenen gönderim aralığına bölerek hesaplamayı öneriyor ve
+   "susma kaç ölçüm sonra?" diye soruyor; 2 dk'ya kadar geç geleni kayıp saymayalım diyor. → Önce **veriden sensör başına
+   gönderim aralığını ve dağılımını ölçmeliyiz** (düzenli mi, rastgele mi?). ⚠️ Akışta aralık bizim seçtiğimiz `--hiz`'e bağlı
+   (--hiz 20, 200 sensör → sensör başına ~10 s; hesap, ölçüm değil). Toplu veride bu aralık farklıdır (3M olay / 200 sensör / 14 gün
+   → ~81 s; hesap). Bu yüzden kural "art arda N ölçüm" olarak değil, "beklenen aralığın k katı" olarak tanımlanmalı. Ayrıca toplu veride
+   geç veri sorunu yoktur, çünkü bütün olaylar S3'te. 2 dk kuralı yalnızca akışta geçerli. **B4'te karar.**
+3. *Toplu veri komutu:* `docker compose exec -T araclar python araclar/uretici.py --grup B231210065 --sablon iot --toplu 3000000 --gun 14`.
+   A'da komut 130 kodu ile bitmiş (130 = kesilme sinyali, SIGINT), ama S3'te 14 gün, 14 dosya ve 3.000.000 kayıt sayılmış. → README'ye bu komut
+   ve doğrulama adımı yazılacak.
+4. *Z2 ölçümü:* A düzeltecek (aynı kayıtlar üzerinden karşılaştırma, satır sayıları, makine bilgisi). ✔
+
+### K-04 · `startingOffsets` = **earliest** — `KARAR` (B1, 24 Kas)
+- **Bağlam:** Akış işi ilk kez açıldığında (checkpoint yokken) Kafka defterinin neresinden okumaya başlayacak?
+  Checkpoint varsa bu ayar **yok sayılır**; iş checkpoint'teki offset'ten devam eder.
+- **Alternatifler:**
+  | | earliest (baştan) | latest (şu andan) | zaman damgasıyla (`startingOffsetsByTimestamp`) |
+  |---|---|---|---|
+  | Artı | Hiçbir olay atlanmaz; iş üreticiden geç açılsa da sayım tam → deney ölçümü güvenilir | Canlı sistemin ilk kurulumunda doğal; eski olaylar için uyarı yağmaz | "Şu saatten itibaren" — ikisinin arası |
+  | Eksi | Konuda eski mesaj varsa onları da işler → her deneyden önce konu + checkpoint temizlenmeli. Checkpoint kaybolursa yeniden işler → **çift sayım** | İş açılana kadar (~20–30 s) gelen olaylar hiç okunmaz → deneyde sahte "kayıp". Checkpoint kaybolursa aradaki veri **sessizce atlanır** | Karmaşık; deneylerimize katkısı yok |
+- **Seçim (Eren):** **earliest** — *"deneylerde hiçbir olay kaçmasın diye."*
+- **Uygulama kuralı:** Her deneyden önce konu silinip yeniden oluşturulur ve checkpoint klasörü silinir (README/deney betiklerine yazılacak).
+- **İdeal durum (gerçek sistem):** İlk kurulumda `latest` (ya da zaman damgasıyla başlangıç) + **checkpoint kalıcı ve yedekli** (S3'te, çoğaltılmış).
+  Sonraki her başlatma checkpoint'ten devam eder. Checkpoint kaybı bir olaydır (incident): `latest` kaybı gizler, `earliest` ise çift sayım üretir.
+  Çift sayıma karşı sink idempotent olmalıdır (K-14). Yani bu ayar asıl güvenceyi sağlamaz, asıl güvence checkpoint'tir.
+- **Hoca sorarsa:**
+  - *"earliest/latest farkı?"* → defterin başı ↔ şu an; yalnızca ilk açılışta geçerli.
+  - *"İş yeniden başlarsa nereden devam eder?"* → checkpoint'teki offset'ten; `startingOffsets` yok sayılır (B7'de gösterilecek).
+  - *"latest geç gelen olayı kaçırır mı?"* → Hayır. `latest` *offset* (yazılma sırası) ile ilgilidir, *olay zamanı* ile değil.
+    İş açıldıktan sonra Kafka'ya yazılan geç bir olay okunur.
+  - *"Checkpoint silinirse?"* → latest: sessiz kayıp · earliest: çift sayım.
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
 
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
-| K-04 | `startingOffsets` earliest ↔ latest | B1/B5 | yeniden başlatmada nereden devam ediyor (checkpoint varken önemi?) |
 | K-05 | Kafka bölüm sayısı | B2 | tepe 4.000/s ÷ bölüm başına ölçülen tüketim hızı |
 | K-06 | Kafka anahtarı (`sensor_id`?) ve sıralama garantisi | B2 | bölüm başına mesaj sayısı dengesi |
 | K-07 | `acks=all` + idempotent üretici | B2 | `--acks 1` / `--idempotent-kapali` ile hız + tekrar farkı |
@@ -93,6 +131,38 @@ Betik: `is/olcum/b1_kafka_kesif.py` (konsol tüketici dökümünü sayar; üreti
   tüm alanların birleşimi gerekli (K-12, B5'te karar).
 - *"Kafka sırayı garanti ediyor mu?"* → Yalnızca aynı bölüm içinde, **yazılma** sırasını. Olay zamanı sırası değil:
   144 mesajda geri gitti. Olay zamanı sırasını watermark + pencere ile Spark kurar.
+
+---
+
+## B2 ölçümleri — konu tasarımı (24 Kas, kanıt: `kanit/b2/`, `kanit/olcum/B.csv`)
+
+**1) Üretici tepeye çıkabiliyor mu?** `--hiz 4000` → 30 s'de 116.803 olay = **3.893 olay/s** (%97). `--hiz 2000` → 1.946/s.
+Tekrar oranı ~%0,2 (Kafka − üretici: 238 / 117.041).
+
+**2) Spark yığın süresi ↔ bölüm sayısı** (`is/olcum/b2_bolum_kapasite.py`; aynı 117.041 mesaj; yığın = 20.000 olay = tepe × 5 s;
+iş yükü A1 benzeri: JSON → filtre → watermark 2 dk → 1 dk pencere × sensör; çıkış `noop`; 3 tekrar; ilk yığın hariç)
+
+| Bölüm | Ort. yığın süresi | İşleme hızı | Tepe (4.000/s) payı |
+|---|---|---|---|
+| 1 | 617 ms | 32.049 olay/s | ~8× fazlası |
+| 3 | 507 ms | 39.192 olay/s | ~10× |
+| 6 | 516 ms | 38.878 olay/s | ~10× |
+| 12 | 508 ms | 39.188 olay/s | ~10× |
+En kötü yığın **1.070 ms** (5.000 ms sınırının çok altında). Soğuk başlangıçta ilk yığın 2,8–3,4 s.
+**Yorum:** Bu makinede bölüm sayısı darboğaz değil; 3'ten sonra kazanç yok (yığın başına sabit maliyet baskın).
+**Sınırlılık:** Tek makine, Spark `local[*]`; çıkış `noop` ve checkpoint yerel → Delta + S3 checkpoint maliyeti B5'te ayrıca ölçülecek.
+
+**3) Anahtar ↔ bölüm dengesi** (en dolu ÷ ortalama; aynı 117.041 mesaj)
+
+| Anahtar | 3 bölüm | 6 bölüm | 12 bölüm |
+|---|---|---|---|
+| `sensor_id` (200 anahtar) | 1,064 (üreticinin kendi bölümleyicisiyle 1,105) | 1,399 | 1,450 |
+| `bolge` (7 anahtar) | **1,700** (17.147 / 33.553 / 66.341) | – | – |
+| anahtarsız | **1,007** | – | – |
+Not: Aynı anahtar, üretici (Python/librdkafka) ve Spark (Java istemci) ile farklı bölüme düşebiliyor (1,105 ↔ 1,064).
+Muhtemel neden: iki istemcinin varsayılan hash yöntemi farklı (**doğrulanmadı**). Pratik sonucu şu: aynı konuya iki farklı
+istemci yazarsa anahtar başına sıra garantisi bozulabilir.
+Yan bulgu: 53 mesajda `bolge` eksik (%0,045) → C'nin kirli veri sayımına.
 
 ---
 
