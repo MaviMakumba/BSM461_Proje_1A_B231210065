@@ -30,7 +30,7 @@
      (atak başı → ⚠), yanlış alarm. Sonuç → `B.csv`, `kanit/b3/enjeksiyon-*.txt`, defter K-09d, sunum §6.4–6.5.
 3. Pencere sonunda tespit > 5 s çıkarsa **K-09e** kararı: kısa pencere (1–2 dk) / kayan pencere / son-X-ölçüm oranı → Eren'e sun.
 4. B3'ü kapat → **B4 (A2 susan sensör)**: sensör başına gönderim aralığını veriden ölç, K-10.
-5. Unutma: ekibe iletilecekler (aşağıda) henüz gönderilmedi; `rol-b → main` PR'ı henüz açılmadı (B5'te C'den önce açılmalı, son tarih 2 Ara).
+5. ✅ 25 Kas: B0–B3 main'e alındı (PR #2, merge 67d243d); A ve C için notlar PR açıklamasında. Bundan sonra her bölüm sonunda rol-b → main PR + merge.
 
 ## B0 alt adımları
 - [x] Depo klonlandı, `rol-b` dalı açıldı
