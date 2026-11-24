@@ -23,13 +23,15 @@
 - [x] Depo klonlandı, `rol-b` dalı açıldı
 - [x] Hocanın 24 Kas kit güncellemesi (`KAFKA_LOG_DIRS`) compose'a alındı → K-01
 - [x] Karar defteri + ilerleme dosyası + YZ günlüğü açıldı
-- [ ] Docker Desktop açık, `dogrula.py` ❌ yok
+- [x] Kit ayağa kalktı (24 Kas): `dogrula.py` çekirdek ✅, `dogrula_spark.py` ✅ (Parquet, Delta, Kafka); Kafka `log.dirs=/var/lib/kafka/data` doğrulandı
 - [ ] README'ye "kitten farklar" bölümü (K-01, K-02)
-- [ ] Dört soru ekipte kesinleşti → K-03
+- [x] T1/T2 kesinleşti (A) → K-03 · [ ] A1/A2 ekibe önerildi, onay bekleniyor
 
 ## Ekibe iletilecekler
 - **A:** PR #1 merge edildi. Notlar: (1) Parquet "temizleme sonrası" ölçülmüş, JSON ham → satır sayısı farklı,
   oran böyle savunulamaz; (2) 112 dosya, ort. ~0,40 MB → küçük dosya (Z4 malzemesi); (3) `makine` sütununa
   donanım yazılmalı (hostname değil); (4) CSV BOM'lu ve tırnaklı.
-- **C:** main'e doğrudan push yerine `rol-c` + PR. S3 healthcheck `localhost→s3` değişikliğinin nedeni? (README'ye yazılacak)
+- **C:** (Ekip kararı 24 Kas: C main'e doğrudan push edebilir, onay gerekmez.) S3 healthcheck `localhost→s3`
+  değişikliğinin nedeni? (README'ye yazılacak)
+- **A:** A1/A2'deki "anomali" tanımını T2 ile ortak yapalım (K-03).
 - **Herkes:** main'i çekip `docker compose up -d` (Kafka konteyneri yeniden yaratılır; mevcut konular silinir — zaten kalıcı değildi).

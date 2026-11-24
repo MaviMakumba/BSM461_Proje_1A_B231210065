@@ -20,7 +20,7 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 
 ## Kararlar
 
-### K-01 · Hocanın kit güncellemesini (`KAFKA_LOG_DIRS`) almak — `KARAR` (B0)
+### K-01 · Hocanın kit güncellemesini (`KAFKA_LOG_DIRS`) almak — `DOĞRULANDI` (B0)
 - **Bağlam:** Kit 24 Kas'ta güncellendi (kit commit `bf6b716`). Önceden compose'da `kafka-veri` birimi bağlıydı ama
   Kafka verisini o dizine yazmıyordu → konteyner yeniden yaratılınca konular ve offset'ler gidiyordu.
 - **Alternatifler:** (1) Güncellemeyi almak · (2) Eski hâli korumak.
@@ -37,10 +37,16 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 - **Yapılacak:** C'ye nedenini sor (muhtemel: konteyner içinde `localhost` IPv6'ya çözülüp wget başarısız oluyor —
   **doğrulanmadı**). Gerçekten gerekiyorsa README "kitten farklar" bölümüne yaz; gerekmiyorsa geri al.
 
-### K-03 · İki akış sorusu (A1, A2) — `AÇIK` (ekip kararı)
-- **Öneri (ORTAK §5):** A1 = son 10 dk'da normal dışına çıkan sensör (eşik) · A2 = susan (veri göndermeyen) sensör.
-- **Neden ikisi birbirinin tekrarı değil:** A1 *gelen* veride eşik aşımı; A2 *gelmeyen* veriyi tespit (durum/zaman aşımı).
-- **Ekiple netleşecek:** "normal dışı" tanımı (sabit eşik mi, sensöre göre mi — veriden bakılacak), "susmak" kaç dakika?
+### K-03 · Dört soru (A1, A2, T1, T2) — toplu taraf `KARAR`, akış tarafı `AÇIK`
+- **T1 (A, 24 Kas'ta gruba yazdı):** sıcaklık, nem ve titreşim ölçümlerinin **gün içinde bölgelere göre** değişimi.
+- **T2 (A):** anomali ve veri kaybı oranlarının **sensör modeli ve kurulum yılına** göre karşılaştırması (`sensorler.csv` join).
+- T1 ve T2 ayrı sonuç tabloları (`iot_t1`, `iot_t2`); C'nin grafikleri bu tablolardan.
+- **A1 (öneri):** son 10 dk'da normal dışına çıkan sensör (eşik) · **A2 (öneri):** susan (veri göndermeyen) sensör.
+- **Neden A1–A2 birbirinin tekrarı değil:** A1 *gelen* veride eşik aşımı; A2 *gelmeyen* veriyi tespit (durum/zaman aşımı).
+- **Akış ↔ toplu tekrar riski:** T2 de "anomali" ve "veri kaybı" sayıyor. Fark: T2 geçmişin toplu oranı (model/yıl
+  kırılımı), A1/A2 canlı uyarı (hangi sensör, şu an). **"Anomali" tanımını A ile aynı tutmalıyız** — yoksa
+  hoca "akışta anomali dediğiniz ile toplu tablodaki anomali aynı mı?" diye sorar.
+- **Netleşecek (B3/B4, veriden):** "normal dışı" tanımı (sabit eşik mi, sensöre/bölgeye göre mi), "susmak" kaç dakika?
 
 ---
 
