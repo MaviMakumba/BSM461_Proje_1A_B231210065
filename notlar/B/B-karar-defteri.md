@@ -32,10 +32,19 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   (`/var/lib/kafka/data`); `docker compose down` sonrası durur, `down -v` siler. Tek düğüm, replika 1 →
   disk giderse veri gider (üretimde RF=3, min.insync=2).
 
-### K-02 · S3 healthcheck `localhost` → `s3` (C'nin değişikliği) — `AÇIK`
-- **Bağlam:** C commit `3dc12e7` ile `docker-compose.yml`'de SeaweedFS healthcheck adresini değiştirdi; neden yazılmamış.
-- **Yapılacak:** C'ye nedenini sor (muhtemel: konteyner içinde `localhost` IPv6'ya çözülüp wget başarısız oluyor —
-  **doğrulanmadı**). Gerçekten gerekiyorsa README "kitten farklar" bölümüne yaz; gerekmiyorsa geri al.
+### K-02 · S3 healthcheck `localhost` → `s3` (C'nin değişikliği) — `KARAR: korunur, README'ye yazılır` (24 Kas)
+- **Belirti (C):** Orijinal hâlde `bsm461-s3` 2 dk boyunca `unhealthy` kaldı → `s3-kur`, `spark`, `araclar` başlamadı.
+  Hata: `wget: can't connect to remote host: Connection refused`.
+- **Kök neden (bizim makinede doğrulandı, 24 Kas):** SeaweedFS 9333 portunu **yalnızca IPv4**'te dinliyor
+  (`127.0.0.1:9333` ve konteyner IP'si `172.18.0.3:9333`; `netstat -tln`). Konteynerin `/etc/hosts` dosyasında `localhost`
+  hem `127.0.0.1` hem `::1` (IPv6) olarak tanımlı; busybox `wget` önce `::1`'i deniyor → orada dinleyen yok → reddedildi.
+  Deneme: `wget localhost:9333` → çıkış 1 · `wget 127.0.0.1:9333` → 0 · `wget s3:9333` → 0.
+  (C'nin "127.0.0.1'e bağlanmıyor" yorumu tam doğru değil: 127.0.0.1'de dinliyor, sorun IPv6 çözümlemesi.)
+- **Alternatifler:** (1) `s3:9333` (C'nin çözümü; Docker iç DNS'i konteyner IP'sine çözer) · (2) `127.0.0.1:9333` (IPv4'e zorlar,
+  servis adına bağlı değil) · (3) orijinal (bizim ve C'nin makinesinde çalışmıyor).
+- **Seçim:** (1) korunur; çalışıyor ve ekip zaten kullanıyor. (2) de eşdeğer bir çözüm; README'de ikisi de anılacak.
+- **Hoca sorarsa:** *"Kiti neden değiştirdiniz?"* → healthcheck IPv6 `localhost`'a gidiyordu, servis yalnızca IPv4'te dinliyor;
+  kanıt yukarıdaki üç `wget` denemesi. Hocanın makinesinde (macOS) farklı davranması çözümleme sırasının farkından olabilir (**doğrulanmadı**).
 
 ### K-03 · Dört soru (A1, A2, T1, T2) — toplu taraf `KARAR`, akış tarafı `AÇIK`
 - **T1 (A, 24 Kas'ta gruba yazdı):** sıcaklık, nem ve titreşim ölçümlerinin **gün içinde bölgelere göre** değişimi.
@@ -66,6 +75,11 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
    A'da komut 130 kodu ile bitmiş (130 = kesilme sinyali, SIGINT), ama S3'te 14 gün, 14 dosya ve 3.000.000 kayıt sayılmış. → README'ye bu komut
    ve doğrulama adımı yazılacak.
 4. *Z2 ölçümü:* A düzeltecek (aynı kayıtlar üzerinden karşılaştırma, satır sayıları, makine bilgisi). ✔
+
+**C'nin cevabı — akış çıktı şemaları (24 Kas):**
+- `akis_iot_a1`: ORTAK §6.3'teki 5 sütun yeterli (`pencere_bas, pencere_bit, anahtar, deger, esik_asildi`).
+- `akis_iot_a2`: 5 sütun + **`son_gorulme TIMESTAMP`** (sensörün son veri gönderdiği an). Pano "ne zamandır susuyor"u da gösterecek.
+- Statik bilgiyi (bölge, model) akışa ekleme: C, Mongo'ya yazarken `sensor_id` ile `sensorler.csv`'den zenginleştirir.
 
 ### K-04 · `startingOffsets` = **earliest** — `KARAR` (B1, 24 Kas)
 - **Bağlam:** Akış işi ilk kez açıldığında (checkpoint yokken) Kafka defterinin neresinden okumaya başlayacak?
