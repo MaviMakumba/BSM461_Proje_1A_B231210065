@@ -83,7 +83,57 @@ Sonraki her başlatmada iş **checkpoint**'ten devam eder. Asıl güvence bu aya
 - *S: `latest` geç gelen olayı kaçırır mı?* → C: Hayır. `latest` deftere *yazılma* sırasıyla ilgili, olay zamanıyla değil.
 
 ## 5. Konu tasarımı (B2) — bölüm sayısı, anahtar, acks
-[B2 bitince doldurulacak]
+
+**Benzetme (postane):** Sensörler mektup gönderiyor. Kafka postane; mektupları **kutulara** atıyor. **Bölüm = kutu.**
+Spark'ın okuyucuları memurlar; bir kutuya aynı anda bir memur bakabilir. **Anahtar = "mektup hangi kutuya?" kuralı.**
+
+### 5.1 Kaç bölüm? → 3 (K-05)
+**Kendi cümlem:** "Ölçümde 1, 3, 6 ve 12 bölümün hepsi tepe yükü 5 saniyenin çok altında işledi; 3 bölüm en dengeli dağılımı verdi
+ve gelecekte üç makineye bölmeye izin veriyor."
+
+**Nasıl ölçtüm:** Tepe yük 4.000 olay/s, uyarı 5 s → her 5 saniyede 20.000 olay gelir. Aynı 117.041 olayı 1, 3, 6 ve 12 bölümlü
+konulara koydum. Spark'ın 20.000'lik her yığını kaç ms'de işlediğini 3'er kez ölçtüm.
+
+| Bölüm | 20.000 olayı işleme süresi | Saniyede | Tepenin kaç katı |
+|---|---|---|---|
+| 1 | 617 ms | 32.049 | ~8 |
+| 3 | 507 ms | 39.192 | ~10 |
+| 6 | 516 ms | 38.878 | ~10 |
+| 12 | 508 ms | 39.188 | ~10 |
+
+**Ne çıktı:** Hız her seçenekte yetiyor; 3'ten sonra artmıyor. O yüzden karar hızla değil, **dengeyle** ve **büyüme payıyla** verildi.
+Bölüm sayısı sonradan azaltılamıyor.
+
+**Soru-cevap:**
+- *S: Yük 10 katına çıkarsa?* → C: Bu makinede ölçülen sınır ~39.000/s, yani tepenin ~10 katı. Ötesi için bölüm artırılır ve
+  okuma birden çok makineye yayılır. Bölüm artırımı sensörlerin hangi bölüme gittiğini değiştirdiği için planlı yapılır.
+- *S: Bölüm sayısını azaltabilir misiniz?* → C: Hayır, Kafka izin vermez; yeni konu açıp taşımak gerekir.
+- *S: Replika neden 1?* → C: Kitte tek Kafka sunucusu var. Gerçek sistemde 3 kopya ve "en az 2 kopya yazmadan onay verme" (`min.insync.replicas=2`).
+- *S: Bu ölçümün sınırı ne?* → C: Tek bilgisayar, sonuç hiçbir yere yazılmadı. S3'e Delta yazma maliyetini B5'te ayrıca ölçtüm. [B5 sonucu eklenecek]
+
+### 5.2 Anahtar? → `sensor_id` (K-06)
+**Kendi cümlem:** "Aynı sensörün ölçümleri aynı bölümde geliş sırasıyla kalsın diye sensor_id seçtim; 3 bölümde dağılım dengeli (1,06),
+bölge anahtarı ise bir bölümü 4 kat doldurdu."
+
+| Anahtar | En dolu bölüm ÷ ortalama (3 bölüm) | Yorum |
+|---|---|---|
+| `sensor_id` (200 sensör) | 1,06 | dengeli + sensör başına sıra |
+| `bolge` (7 bölge) | 1,70 | bir bölüm diğerinin ~4 katı → sıcak bölüm |
+| anahtarsız | 1,01 | en dengeli ama sensörün mesajları dağılır, sıra yok |
+Ayrıca `sensor_id` ile 6 bölümde 1,40, 12 bölümde 1,45 → 200 anahtar az; bölüm çoğaldıkça denge bozuluyor (5.1'in de gerekçesi).
+
+**Sıra neden önemli (örnek):** sensor-012 önce "95 °C" (alarm), sonra "20 °C" (düzeldi) gönderdi. Aynı bölümde sırayla dururlar,
+okuyan doğru anlar. Farklı bölümlerde "20" önce okunabilir ve "alarm sürüyor" diye yanlış sonuç çıkar.
+
+**Soru-cevap:**
+- *S: Sıra nerede garanti?* → C: Yalnızca aynı bölüm içinde ve yazılma sırası olarak. Konunun tamamında garanti yok.
+- *S: Spark sorgunuz bu sıraya mı güveniyor?* → C: Hayır. Spark sensöre göre gruplarken veriyi yeniden dağıtıyor ve ölçüm saatine
+  (olay zamanı) göre çalışıyor. Bu yüzden iki sorumuzun sonucu anahtardan etkilenmiyor. Anahtarın getirisi Kafka'yı doğrudan okuyan
+  başka programlar ve tekrar kopyalarının aynı bölüme düşmesi.
+- *S: Tek bir sensör çok yoğun gönderirse?* → C: O bölüm ısınır. Çözümü anahtara rastgele bir ek koymak (tuzlama); bedeli o sensörün sırasının kaybı.
+
+### 5.3 acks / idempotent (K-07)
+[ölçüm sürüyor — eklenecek]
 
 ## 6. A1 — normal dışı sensör (B3)
 [doldurulacak]

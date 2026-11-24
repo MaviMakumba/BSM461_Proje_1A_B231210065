@@ -1,0 +1,10 @@
+→ Kafka 'b2-acks-all-idemacik-v2r3' · acks=all · idempotent=açık
+→ Kafka 'b2-acks-all-idemacik-v2r3' konusuna saniyede ~100000 olay · geç oranı 0.15 (en fazla 2 dk) · Ctrl+C ile dur
+  97.778 olay gönderildi
+Traceback (most recent call last):
+  File "/kit/araclar/uretici.py", line 386, in <module>
+    akis(a, olay, SABLONLAR[a.sablon]["anahtar"], r)
+  File "/kit/araclar/uretici.py", line 295, in akis
+    p.produce(konu, key=anah, value=deger)
+BufferError: Local: Queue full
+%4|1795548989.228|TERMINATE|rdkafka#producer-1| [thrd:app]: Producer terminating with 100000 messages (14250772 bytes) still in queue or transit: use flush() to wait for outstanding message delivery

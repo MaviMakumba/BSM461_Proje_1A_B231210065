@@ -1,0 +1,4 @@
+→ Kafka 'b2-acks-0-idemkapali-v2r1' · acks=0 · idempotent=kapalı
+→ Kafka 'b2-acks-0-idemkapali-v2r1' konusuna saniyede ~100000 olay · geç oranı 0.15 (en fazla 2 dk) · Ctrl+C ile dur
+  97.335 olay gönderildi
+✓ toplam 973.156 olay

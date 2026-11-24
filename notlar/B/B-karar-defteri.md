@@ -101,14 +101,48 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
     İş açıldıktan sonra Kafka'ya yazılan geç bir olay okunur.
   - *"Checkpoint silinirse?"* → latest: sessiz kayıp · earliest: çift sayım.
 
+### K-05 · Kafka konusu `sensorler` = **3 bölüm** — `KARAR` (B2, 24 Kas)
+- **Bağlam:** Bölüm sayısı, aynı anda kaç okuyucunun paralel çalışabileceğini belirler. Sonradan **azaltılamaz**;
+  artırılırsa anahtar→bölüm eşlemesi değişir (geçişte anahtar başına sıra bozulur).
+- **Ölçüm (B2 ölçümleri §2-3):** 20.000 olaylık yığın (tepe × 5 s) 1/3/6/12 bölümde ort. 617/507/516/508 ms → hepsi 5.000 ms'nin
+  çok altında; 3'ten sonra kazanç yok. Denge (`sensor_id`): 3 bölüm 1,064 · 6 bölüm 1,399 · 12 bölüm 1,450.
+- **Alternatifler:** 1 (basit, büyümeye kapalı) · **3** · 6 (büyüme payı, ama dengesiz ve bugün kazanç yok).
+- **Seçim + gerekçe (Eren):** *"Ölçümde 1, 3, 6 ve 12 bölümün hepsi tepe yükü 5 saniyenin çok altında işledi; 3 bölüm en dengeli
+  dağılımı verdi ve gelecekte üç makineye bölmeye izin veriyor."*
+- **Bedeli:** Yük ~10 katına çıkarsa (ölçülen kapasite ~39.000 olay/s ≈ tepe × 10) tek makine sınıra gelir; o zaman bölüm artırımı
+  + çok makine gerekir → C'nin Z1 10×/100× tartışmasına bağlanır.
+- **Uygulama:** Konu, otomatik oluşmaya bırakılmadan `is/akis/konu_hazirla.py` ile açıkça 3 bölüm / replika 1 kurulur
+  (yönerge Adım 11.1; K-04 gereği her deneyden önce de çalıştırılır).
+- **Hoca sorarsa:**
+  - *"Neden 3?"* → yukarıdaki cümle + tablo.
+  - *"Yük 10 katına çıkarsa?"* → ~39.000/s ölçülen kapasite sınırı; bölüm artırılır, okuyucular birden çok makineye yayılır.
+    Bölüm artırımı anahtar eşlemesini değiştirir, bu yüzden geçiş planlı yapılır.
+  - *"Bölümü azaltabilir misiniz?"* → Hayır, Kafka izin vermez; yeni konu açıp taşımak gerekir.
+  - *"Replika neden 1?"* → Kitte tek Kafka düğümü var. Üretimde RF=3, `min.insync.replicas=2` olmalı (Z0 garanti tablosu).
+
+### K-06 · Kafka anahtarı = **`sensor_id`** — `KARAR` (B2, 24 Kas)
+- **Bağlam:** Anahtar, mesajın hangi bölüme yazılacağını belirler (hash(anahtar) mod bölüm sayısı). Aynı anahtar → aynı bölüm → o
+  anahtarın mesajları **yazılma sırasıyla** durur.
+- **Ölçüm (3 bölüm, en dolu ÷ ortalama):** `sensor_id` 1,064 · anahtarsız 1,007 · `bolge` 1,700 (bir bölüm diğerinin ~4 katı).
+- **Alternatifler:** **`sensor_id`** · anahtarsız (en dengeli; sensör başına sıra yok) · `bolge` (7 değer → sıcak bölüm).
+- **Seçim + gerekçe (Eren):** *"Aynı sensörün ölçümleri aynı bölümde geliş sırasıyla kalsın diye sensor_id seçtim; 3 bölümde dağılım
+  dengeli (1,06), bölge anahtarı ise bir bölümü 4 kat doldurdu."*
+- **Dürüst sınır:** Spark sorgularımız sensöre göre gruplarken veriyi zaten yeniden dağıtıyor (shuffle) ve olay zamanına göre
+  sıralıyor. Bu yüzden A1 ve A2'nin sonucu anahtar seçimine bağlı değil. Anahtarın getirisi şunlar: Kafka'yı doğrudan okuyan başka tüketiciler
+  için sensör başına sıra, aynı sensörün tekrar kopyalarının aynı bölüme düşmesi ve ileride "her sensörün son durumu" için log
+  compaction imkânı. Sıra **yazılma** sırasıdır, olay zamanı sırası değil (B1: 144 mesaj geri gitti).
+- **Hoca sorarsa:**
+  - *"Sıra nerede garanti?"* → Yalnızca aynı bölüm içinde, yazılma sırası olarak; konunun tamamında garanti yok.
+  - *"Bölüm sayısını artırırsanız?"* → 6'da 1,40, 12'de 1,45: 200 anahtar az olduğu için denge bozuluyor.
+  - *"Sıcak sensör olursa?"* → Bir sensör çok yoğun gönderirse bölümü ısınır; çözümü tuzlama (sensor_id + rastgele ek),
+    bedeli sensör başına sıranın kaybı. (Z3 C'de; C'nin ölçümüyle bağlanacak.)
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
 
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
-| K-05 | Kafka bölüm sayısı | B2 | tepe 4.000/s ÷ bölüm başına ölçülen tüketim hızı |
-| K-06 | Kafka anahtarı (`sensor_id`?) ve sıralama garantisi | B2 | bölüm başına mesaj sayısı dengesi |
 | K-07 | `acks=all` + idempotent üretici | B2 | `--acks 1` / `--idempotent-kapali` ile hız + tekrar farkı |
 | K-08 | Trigger süresi (5 s uyarı) | B3 | batch süresi < trigger mı; uçtan uca gecikme |
 | K-09 | A1 yöntemi: olay bazlı filtre ↔ pencere | B3 | uyarı gecikmesi |
@@ -177,6 +211,22 @@ Not: Aynı anahtar, üretici (Python/librdkafka) ve Spark (Java istemci) ile far
 Muhtemel neden: iki istemcinin varsayılan hash yöntemi farklı (**doğrulanmadı**). Pratik sonucu şu: aynı konuya iki farklı
 istemci yazarsa anahtar başına sıra garantisi bozulabilir.
 Yan bulgu: 53 mesajda `bolge` eksik (%0,045) → C'nin kirli veri sayımına.
+
+**4) acks / idempotent** (`--hiz 100000 --sure 10`, 3 tekrar, kanıt: `kanit/b2/acks-olcum.txt`, `kanit/b2/acks-gunluk/`)
+
+| Ayar | Ort. hız (duvar süresiyle) | Tekrar (Kafka − üretici) |
+|---|---|---|
+| acks=all + idempotent açık | 48.623 olay/s (2 başarılı tekrar) | ~%0,2 |
+| acks=all + idempotent kapalı | 48.272 | ~%0,2 |
+| acks=1 | 47.839 | ~%0,2 |
+| acks=0 | 48.355 | ~%0,2 |
+**Yorum:** Fark %1,6 içinde, yani anlamlı değil. Nedenleri: (1) Kitte tek Kafka düğümü ve replika 1 olduğu için `all` ile `1` aynı işi yapar (beklenecek başka kopya yok).
+(2) Darboğaz Python üreticisinin kendisi (olay üretimi, CPU), Kafka'nın onay süresi değil. (3) Ağ hatası olmadığı için yeniden deneme
+olmadı → idempotentliğin düzelteceği bir şey yoktu. Tekrarlar (%0,2) idempotent açıkken de var, çünkü uygulama düzeyindeler (B1 bulgu 3).
+**Ek bulgu (Z11):** Tepenin ~25 katında (100.000/s) 24 çalıştırmanın 4'ünde üretici `BufferError: Local: Queue full` ile çöktü;
+yerel kuyruktaki **100.000 mesaj kayboldu** (ör. v2r3: Kafka'da yalnızca 118.378). Kafka anlık yetişemeyince üreticinin
+arabelleği doluyor ve uygulama bunu yakalamıyor → kayıp. acks ayarı bunu önlemez (mesajlar hiç gönderilmemişti).
+**Sınırlılık:** Duvar süresi `docker exec` ve Python başlangıcını içeriyor; hız mutlak değil, ayarlar arası karşılaştırma için.
 
 ---
 

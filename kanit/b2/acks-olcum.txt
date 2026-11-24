@@ -1,0 +1,12 @@
+b2-acks-all-idemacik-v2r1 cikis=0 sure_ms=19828 uretici=973156 kafka=975120 hata_satiri=0
+b2-acks-all-idemkapali-v2r1 cikis=0 sure_ms=19986 uretici=973156 kafka=975120 hata_satiri=0
+b2-acks-1-idemkapali-v2r1 cikis=0 sure_ms=20321 uretici=973156 kafka=975120 hata_satiri=0
+b2-acks-0-idemkapali-v2r1 cikis=0 sure_ms=20168 uretici=973156 kafka=975120 hata_satiri=0
+b2-acks-all-idemacik-v2r2 cikis=0 sure_ms=20251 uretici=975411 kafka=977403 hata_satiri=0
+b2-acks-all-idemkapali-v2r2 cikis=0 sure_ms=20260 uretici=977330 kafka=979334 hata_satiri=0
+b2-acks-1-idemkapali-v2r2 cikis=0 sure_ms=20304 uretici=977450 kafka=979456 hata_satiri=0
+b2-acks-0-idemkapali-v2r2 cikis=0 sure_ms=20022 uretici=977631 kafka=979632 hata_satiri=0
+b2-acks-all-idemacik-v2r3 cikis=1 sure_ms=2708 uretici= kafka=118378 hata_satiri=2
+b2-acks-all-idemkapali-v2r3 cikis=0 sure_ms=20422 uretici=977882 kafka=979880 hata_satiri=0
+b2-acks-1-idemkapali-v2r3 cikis=0 sure_ms=20595 uretici=978000 kafka=980001 hata_satiri=0
+b2-acks-0-idemkapali-v2r3 cikis=0 sure_ms=20382 uretici=978000 kafka=980001 hata_satiri=0
