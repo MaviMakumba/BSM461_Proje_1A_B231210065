@@ -22,7 +22,11 @@ import time
 from pyspark.sql import SparkSession, functions as F
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--mod", default="ikisi", choices=["anlik", "pencere", "ikisi"])
+ap.add_argument("--mod", default="oran", choices=["oran", "anlik", "pencere", "ikisi"],
+                help="oran = K-09b kararı; anlik/pencere/ikisi = B3 karşılaştırma deneyleri")
+ap.add_argument("--oran-esik", type=float, default=1.0, help="K-09b: pencerede sıçrama oranı (%%) eşiği")
+ap.add_argument("--min-olcum", type=int, default=200, help="K-09b: oranın değerlendirilmesi için en az ölçüm (B3'te ölçülüyor)")
+ap.add_argument("--ham-kayit", default=None, help="oran kipi: her yığında güncellenen bütün pencere satırları (analiz için) CSV")
 ap.add_argument("--trigger", type=float, default=2.0, help="mikro-yığın aralığı, saniye (K-08)")
 ap.add_argument("--esik", default="s3a://islenmis/_stub/iot_esik.parquet", help="K-09a eşik tablosu (A'nınki gelince değişecek)")
 ap.add_argument("--k", type=float, default=5.0)
@@ -105,8 +109,58 @@ def pencere_yigin(df, yigin_id):
     df.unpersist()
 
 
+# ── K-09b: 10 dk pencerede sensörün sıçrama ORANI (ölçüm = bir mesaj; herhangi bir ölçü eşiği aşarsa sıçrama) ──
+esik_genis = (esik.groupBy("bolge", "saat").pivot("olcu", ["sicaklik", "nem", "titresim"])
+              .agg(F.first("medyan").alias("m"), F.first("dss").alias("d")))
+
+
+def asti(olcu):
+    return F.coalesce(F.abs(F.col(olcu) - F.col(f"{olcu}_m")) > a.k * F.col(f"{olcu}_d"), F.lit(False))
+
+
+oran = (olay.join(F.broadcast(esik_genis), ["bolge", "saat"])
+        .withColumn("anomali", asti("sicaklik") | asti("nem") | asti("titresim"))
+        .withWatermark("olay_zamani", a.watermark)
+        .groupBy(F.window("olay_zamani", a.pencere), "sensor_id")
+        .agg(F.count("*").alias("olcum_sayisi"), F.sum(F.col("anomali").cast("int")).alias("anomali_sayisi"),
+             F.max("kafka_zamani").alias("son_kafka"))
+        .select(F.col("window.start").alias("pencere_bas"), F.col("window.end").alias("pencere_bit"),
+                F.col("sensor_id").alias("anahtar"),
+                F.round(100 * F.col("anomali_sayisi") / F.col("olcum_sayisi"), 3).alias("deger"),          # oran, %
+                ((100 * F.col("anomali_sayisi") / F.col("olcum_sayisi") > a.oran_esik)
+                 & (F.col("olcum_sayisi") >= a.min_olcum)).alias("esik_asildi"),
+                "olcum_sayisi", "anomali_sayisi", "son_kafka"))
+isaretli_once = set()
+
+
+def oran_yigin(df, yigin_id):
+    satirlar = df.collect()          # güncellenen pencere satırları (≈ etkin sensör sayısı kadar, küçük)
+    t_bitti = time.time()
+    if not satirlar:
+        return
+    if a.ham_kayit:                  # analiz için ham kayıt: her yığında her güncellenen satır
+        yol = os.path.join("/kit", a.ham_kayit)
+        yeni = not os.path.exists(yol)
+        with open(yol, "a", newline="", encoding="utf-8") as f:
+            w = csv.writer(f)
+            if yeni:
+                w.writerow(["etiket", "yigin", "t_bitti", "pencere_bas", "anahtar", "olcum_sayisi", "anomali_sayisi", "son_kafka"])
+            for r in satirlar:
+                w.writerow([a.etiket, yigin_id, round(t_bitti, 3), r["pencere_bas"], r["anahtar"], r["olcum_sayisi"],
+                            r["anomali_sayisi"], round(r["son_kafka"].timestamp(), 3)])
+    yeni_isaret = [r for r in satirlar if r["esik_asildi"] and (r["pencere_bas"], r["anahtar"]) not in isaretli_once]
+    for r in yeni_isaret:
+        isaretli_once.add((r["pencere_bas"], r["anahtar"]))
+        print(f"⚠ yığın {yigin_id}: {r['anahtar']} normal dışı · pencere {r['pencere_bas']:%H:%M} · oran %{r['deger']} "
+              f"({r['anomali_sayisi']}/{r['olcum_sayisi']}) · Kafka'dan {t_bitti - r['son_kafka'].timestamp():.2f} s sonra")
+
+
 sorgular = []
 etiket = a.etiket or f"t{a.trigger}"
+if a.mod == "oran":
+    sorgular.append(oran.writeStream.outputMode("update").foreachBatch(oran_yigin)
+                    .option("checkpointLocation", f"/tmp/chk-a1-oran-{etiket}-{int(time.time())}")
+                    .trigger(processingTime=f"{a.trigger} seconds").start())
 if a.mod in ("anlik", "ikisi"):
     sorgular.append(uzun.where("anomali").writeStream.foreachBatch(anlik_yigin)
                     .option("checkpointLocation", f"/tmp/chk-a1-anlik-{etiket}-{int(time.time())}")

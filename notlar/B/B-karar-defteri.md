@@ -178,14 +178,44 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   - *"Neden saat?"* → günlük ~8 °C döngü; saati katmazsak öğlen normal olan sıcaklık gece "normal" sayılır ya da tersi.
   - *"Akıştaki anomali ile T2'deki aynı mı?"* → Evet, aynı eşik tablosu.
 
+### K-08 · Trigger (mikro-yığın aralığı) = **2 s** — `KARAR` (B3, 24 Kas)
+- **Bağlam:** Spark veriyi yığınlar hâlinde işler. En kötü uyarı gecikmesi ≈ trigger + yığın işleme süresi. Kitin iskeleti 10 s kullanıyor → kartı ihlal eder.
+- **Ölçüm (B3 bulguları 2):** en kötü gecikme maks: 1 s → 1,77 s · **2 s → 2,43 s** · 5 s → 5,65 s (26 yığının 18'i > 5 s).
+- **Alternatifler:** 1 s (en hızlı, iki kat yığın/dosya) · **2 s** · 5 s (sınırı aşıyor) · kit varsayılanı 10 s.
+- **Seçim (Eren). Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:** *"Ölçümde en kötü uyarı gecikmesi trigger 2 sn'de 2,4 sn,
+  5 sn'de 5,65 sn çıktı; 5 sn trigger kartın sınırını yığınların çoğunda aşıyor. 1 sn daha hızlı ama iki kat fazla küçük dosya üretiyor;
+  2 sn sınırın yarısında kalarak ikisini dengeliyor."*
+- **Bedeli:** Delta'ya her 2 s'de bir commit → çok sayıda küçük dosya (günde ~43.200 yığın, hesap). Çaresi Delta `OPTIMIZE` / sıkıştırma (B5'te ölçülecek).
+- **Hoca sorarsa:** *"Neden 5 s değil, kart 5 s diyor?"* → gecikme = bekleme + işleme; 5 s trigger + ~0,5 s işleme > 5 s, ölçtük.
+  *"Continuous processing (sürekli kip) neden değil?"* → Spark'ın deneysel kipidir, pencere/toplulaştırma desteklemez ve yalnızca en az bir kez garanti verir.
+
+### K-09b · A1 yöntemi = **10 dk pencerede sensörün sıçrama ORANI, her yığında güncellenir (update + MERGE)** — `KARAR` (B3, 24 Kas)
+- **Bağlam:** Anlık yol (her sıçramaya uyarı) saniyede ~12 uyarı üretti; 10 dk penceresinde 200 sensörün 197'si "eşik aştı". Toplu veride
+  190 sensörün sıçrama oranı %0,2–0,4 (bağımsız tekil sıçramalar = ölçüm hatası), 10 TX-200 sensörü %2,0–2,7 (kümeli; anomali sonrası
+  anomali %36). %0,4–2,0 bandı boş.
+- **Kural:** Sensör, 10 dk'lık pencerede **sıçrama oranı > %1** ve **en az N ölçüm** varsa normal dışıdır (N bu bölümde ölçülecek). Satır her
+  yığında güncellenir (`update` kipi); Delta'ya `foreachBatch` + `MERGE` (pencere_bas, anahtar) ile yazılır (B5). Geç ölçümler watermark
+  süresince pencereyi düzeltir.
+- **Alternatifler:** (1) her sıçramaya uyarı: ~2 s ama 12 uyarı/s, sağlam sensörlere de uyarı · (2) pencere + append: kesin ama 2–12 dk ·
+  **(3) pencere oranı + update**.
+- **Seçim (Eren). Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:** *"Veride her sensör ara sıra tekil sıçrama yapıyor (%0,2–0,4), oysa
+  arızalı 10 sensör %2,0–2,7 oranında ve kümeli sıçrıyor. Bu yüzden 'normal dışı sensör'ü tek bir ölçümle değil, 10 dakikalık penceredeki
+  sıçrama oranıyla (%1 eşiği) tanımladım ve satırı her 2 saniyede güncelleyerek 5 saniye sınırını koruyorum."*
+- **Bedeli / sınırı:** Pencere başında az ölçüm varken oran oynak → "en az N ölçüm" şartı tespiti geciktirir. Sabit (tumbling) pencerede her
+  10 dk'da sayım sıfırlanır → arızalı sensör her pencerenin başında N ölçüm boyunca görünmez (kayan pencere çözer, ama durum 10 kat büyür).
+  `update` kipi satırı değiştirir → okuyan taraf (C) satırın kesinleşmediğini bilmeli (pencere_bit + watermark geçince kesin).
+- **Hoca sorarsa:**
+  - *"5 s'yi nasıl tutturdunuz, pencere 10 dk değil mi?"* → Pencerenin kapanmasını beklemiyorum; oran eşiği aşıldığı yığında satır güncelleniyor (~2 s).
+    Kesin sayı, pencere bitip watermark geçince oluşuyor. Hız ve kesinlik iki ayrı an.
+  - *"Neden %1?"* → Veride sağlam sensörler en fazla %0,4, arızalılar en az %2,0; %1 boşluğun ortası.
+  - *"Tek sıçramayı neden uyarmıyorsunuz?"* → 190 sağlam sensörün hepsinde var; sıçramadan sonraki ölçüm %0,3 ihtimalle anomali, yani bağımsız ölçüm hatası.
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
 
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
-| K-08 | Trigger süresi (5 s uyarı) | B3 | batch süresi < trigger mı; uçtan uca gecikme |
-| K-09b | A1 yöntemi: olay bazlı filtre ↔ pencere ↔ ikisi | B3 | uyarı gecikmesi (olay → çıktı) |
 | K-10 | A2 yöntemi: durumlu (state) ↔ pencere + `sensorler.csv` | B4 | yanlış alarm (geç veri ↔ susma) |
 | K-11 | Çıkış kipi (append/update) ve sink (Delta) | B5 | — |
 | K-12 | Tekrar ayıklama anahtarı (`dropDuplicates` + watermark) | B5 | önce/sonra sayım |
@@ -313,6 +343,27 @@ Deney: `is/olcum/b3_gecikme_deneyi.sh` → her çalıştırmada konu sıfırlan�
   aradaki %0,4–2,0 bandı **boş**. Arızalı sensörlerde sıçramalar kümeli: anomaliden sonraki ölçüm %36,2 ihtimalle yine anomali
   (diğerlerinde %0,2–0,5 ≈ taban oranı → bağımsız tekil sıçramalar).
   → "Normal dışı **sensör**" = anomali **oranı** yüksek sensör. Tekil sıçrama = ölçüm hatası (glitch).
+
+---
+
+## B3 bulguları (3) — oran kuralı akışta + arıza atakları (25 Kas, kanıt: `kanit/b3/oran-analiz.txt`, `kanit/b3/ariza-zamani.txt`)
+
+**Akış deneyi (20 dk, `--hiz 2000`, 3 pencere, 600 sensör-pencere):** Sistem gecikmesi medyan **1,1 s**, maks 1,5 s.
+Toplu veride arızalı olan 10 sensör akışta **normal** davrandı (%0,15–0,44) → 20 dk içinde arıza yaşanmadı.
+
+| Kural | Yanlış alarm (sensör-pencere) |
+|---|---|
+| oran > %1 ve ölçüm ≥ N: N=100 / 200 / 300 / 500 / 750 / **1000** | 70 / 33 / 18 / 6 / 3 / **0** |
+| oran > %1 ve sıçrama ≥ m: m=3 / 5 / 8 / **10** / 12 | 33 / 12 / 3 / **0** / 0 (569 sağlam sensör-pencere) |
+Sağlam bir sensörün oran > %1 iken ulaştığı en büyük sıçrama sayısı **8**.
+
+**Arızanın zaman yapısı (toplu 3M):** Arıza sürekli değil. **Her gün bir kez, 10 sensör aynı anda, ~1–2 saatlik ortak atak**
+(ör. 10 Kas 03:00–03:59, 21 Kas 14:00–14:59). Tepe saatte oran **%50,28**. Aynı saatte diğer 15 TX-200 %0,34, diğer modeller %0,29
+(etkilenmiyor). Atak dışında bu sensörler de tekil sıçrama düzeyinde.
+→ "Arızalı sensör" aslında **"arıza atağı yaşayan sensör"**. A1 kuralı atak başlar başlamaz yakalamalı.
+
+**Çıkarım (hesap, ölçüm değil):** Atakta sensör saniyede ~10 ölçüm (akış hızında) × %50 = saniyede ~5 sıçrama → m=10 eşiği ~2 s'de dolar.
+Bunun üstüne ~1,1 s sistem gecikmesi gelir. N=1000 kuralında ise her yeni pencerenin başında 100 s beklenir. **Doğrulama için atak enjeksiyonu gerekli.**
 
 ---
 

@@ -1,0 +1,32 @@
+Ham satır: 138526 · pencere: 3 → ['2026-11-24 20:50:00', '2026-11-24 21:00:00', '2026-11-24 21:10:00']
+Doğru cevap (toplu veriden, oran > %1.0): ['sensor-050', 'sensor-051', 'sensor-052', 'sensor-053', 'sensor-054', 'sensor-055', 'sensor-056', 'sensor-057', 'sensor-058', 'sensor-059']
+
+## Pencere sonundaki oranlar (akışta da boşluk var mı?)
+  2026-11-24 20:50:00: sensör 199 · ort. ölçüm/sensör 1350 · sağlam oran 0.00–0.91% · arızalı oran 0.15–0.44%
+  2026-11-24 21:00:00: sensör 200 · ort. ölçüm/sensör 5698 · sağlam oran 0.10–0.53% · arızalı oran 0.19–0.38%
+  2026-11-24 21:10:00: sensör 200 · ort. ölçüm/sensör 4465 · sağlam oran 0.13–0.49% · arızalı oran 0.20–0.44%
+
+## N'e göre sonuç (her pencere ayrı değerlendirilir)
+N | doğru | yanlış alarm | kaçan | tespit süresi (s) medyan / maks | sistem gecikmesi (s) medyan / maks
+100 | 4 | 70 | 26 | 19.2 / 46.3 | 1.1 / 1.4
+200 | 3 | 33 | 27 | 28.1 / 46.3 | 1.1 / 1.4
+300 | 2 | 18 | 28 | 49.3 / 56.5 | 1.1 / 1.5
+500 | 0 | 6 | 30 | - | 1.1 / 1.2
+750 | 0 | 3 | 30 | - | 1.2 / 1.2
+1000 | 0 | 0 | 29 | - | -
+1500 | 0 | 0 | 20 | - | -
+2000 | 0 | 0 | 20 | - | -
+3000 | 0 | 0 | 19 | - | -
+
+## Alternatif kural: oran > %1 VE en az m sıçrama (az ölçümde değil, yeterli sıçramada karar)
+m | yanlış alarm (sağlam sensör-pencere) | toplam sağlam sensör-pencere | en erken yanlış alarmın ölçüm sayısı
+3 | 33 | 569 | 153
+5 | 12 | 569 | 412
+8 | 3 | 569 | 695
+10 | 0 | 569 | -
+12 | 0 | 569 | -
+15 | 0 | 569 | -
+20 | 0 | 569 | -
+
+## Sağlam sensörlerde pencere içinde oran > %1 iken ulaşılan EN BÜYÜK sıçrama sayısı (dağılım)
+[(0, 418), (1, 81), (2, 37), (3, 15), (4, 6), (5, 6), (6, 2), (7, 1), (8, 3)]
