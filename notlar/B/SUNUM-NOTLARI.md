@@ -198,6 +198,61 @@ gerçek oynama 0,05. Sıçramalar gerçek oynamanın ortalama 50 katı.
   (%0,672 ↔ %0,675). Bölge daha basit (504 satıra karşı 600) ve açıklaması kolay.
 - *S: Akıştaki anomaliyle toplu tablodaki aynı mı?* → C: Evet, ikisi aynı eşik tablosunu okuyor.
 
+### 6.2 Spark kaç saniyede bir bakar? → 2 saniye (K-08)
+**Kavram:** Spark akışı tek tek değil, küçük paketler (mikro-yığın) hâlinde işler. "Trigger" paketlerin kaç saniyede bir alınacağıdır.
+Benzetme: Postacı kutuyu her 2 saniyede bir boşaltıyor. Bir mektup en kötü ihtimalle 2 saniye kutuda bekler, üstüne ayıklama süresi eklenir.
+
+**Ölçtüğüm:** En kötü uyarı gecikmesi: trigger 1 s → 1,77 s · **2 s → 2,43 s** · 5 s → 5,65 s (yığınların çoğu 5 s'yi aştı).
+
+**Kendi cümlem:** "Ölçümde en kötü uyarı gecikmesi trigger 2 sn'de 2,4 sn, 5 sn'de 5,65 sn çıktı; 5 sn trigger kartın sınırını yığınların
+çoğunda aşıyor. 1 sn daha hızlı ama iki kat fazla küçük dosya üretiyor; 2 sn sınırın yarısında kalarak ikisini dengeliyor."
+
+**Soru-cevap:**
+- *S: Kart 5 s diyor, neden 5 değil?* → C: Gecikme = bekleme + işleme. 5 s bekleyip üstüne yarım saniye işlersem sınırı aşarım; ölçtüm, aştı.
+- *S: Bedeli?* → C: Her 2 saniyede bir yazma = çok sayıda küçük dosya. Delta'nın sıkıştırma (OPTIMIZE) özelliğiyle çözülür, B5'te ölçeceğim.
+
+### 6.3 "Normal dışı sensör" = tek sıçrama değil, sıçrama ORANI (K-09b)
+**Sorun:** Her sıçramaya uyarı verince saniyede ~12 uyarı çıktı; 200 sensörün 197'si "arızalı" göründü.
+**Bulgu:** Veride her sensör ara sıra tek bir saçma değer üretiyor (%0,2–0,4). Bu ölçüm hatası. Gerçekten arızalı 10 sensör (hepsi TX-200)
+ise %2,0–2,7 oranında ve art arda sıçrıyor. Arada boşluk var: %0,4 ile %2,0 arasında hiç sensör yok.
+Benzetme: Hastane monitörü kablo oynadığında bir kez öter; hemşire tek ötüşe koşmaz, ötüşler sıklaşınca koşar.
+
+**Kural:** Sensör, 10 dakikalık pencerede sıçrama oranı **%1'i** geçerse normal dışıdır. %1 iki grubun tam arasında.
+Pencerenin bitmesini beklemiyorum; satır her 2 saniyede güncelleniyor (update kipi), eşik geçildiği anda uyarı çıkıyor.
+
+**Kendi cümlem:** "Veride her sensör ara sıra tekil sıçrama yapıyor (%0,2–0,4), oysa arızalı 10 sensör %2,0–2,7 oranında ve kümeli sıçrıyor.
+Bu yüzden 'normal dışı sensör'ü tek bir ölçümle değil, 10 dakikalık penceredeki sıçrama oranıyla (%1 eşiği) tanımladım ve satırı her
+2 saniyede güncelleyerek 5 saniye sınırını koruyorum."
+
+- *S: Pencere 10 dk, 5 s'yi nasıl tutuyorsun?* → C: Hız ve kesinlik iki ayrı an. Uyarı eşik geçildiği yığında (~2 s) çıkıyor; kesin sayı pencere
+  kapanıp geç veri süresi (watermark) geçince oluşuyor.
+
+### 6.4 "En az 12 sıçrama" şartı (K-09c)
+**Sorun:** Pencere yeni başladığında 50 ölçümde 1 sıçrama bile %2 eder → sağlam sensöre yanlış alarm.
+**İki çare denedim (20 dk akış, 600 sensör-pencere):**
+- "En az 1000 ölçüm olsun": yanlış alarm 0, ama her pencere başında 100 saniye kör.
+- "En az m sıçrama olsun": sağlam sensörler tesadüfen en fazla **8** sıçramaya ulaştı; m=10'da yanlış alarm 0. Pay bırakıp **12** seçtim.
+
+**Kendi cümlem:** "Sağlam sensörler 20 dakikalık akışta tesadüfen en fazla 8 sıçramaya ulaştı; 12 eşiği 600 sensör-pencerede sıfır yanlış
+alarm verirken, yarı yarıya sıçrayan bir arıza atağını birkaç saniyede yakalaması bekleniyor. Ölçüm sayısına dayalı eşik ise her pencere
+başında 100 saniye kör kalıyordu." [tespit süresi enjeksiyon deneyinden sonra eklenecek]
+
+- *S: Zayıf noktası?* → C: Atak pencerenin sonlarına doğru başlarsa, pencerede biriken normal ölçümler oranı aşağı çeker ve %1'i geçmek
+  birkaç saniye uzar (hesapla en kötü ~8 s). Bunu enjeksiyon deneyinde ölçüyorum. [sonuç eklenecek]
+
+### 6.5 Arızayı akışta nasıl gösterdim? → arıza enjeksiyonu (K-09d)
+**Bulgu:** Geçmiş veride arıza sürekli değil: **günde bir kez, 10 sensör aynı anda, 1–2 saatlik atak**; atak sırasında ölçümlerin yarısı sıçrama.
+20 dakikalık akış deneyime bu atak denk gelmedi.
+**Çözüm:** Normal akış sürerken bu 10 sensör için, geçmiş veride ölçtüğüm atak davranışını (oran %50, gerçek sapma büyüklükleri) Kafka'ya
+basıyorum ve uyarının kaç saniyede çıktığını ölçüyorum. Benzetme: Yangın tatbikatı. Gerçek yangını beklemiyorsun; duman makinesiyle
+dedektörün kaç saniyede öttüğünü ölçüyorsun.
+
+**Kendi cümlem:** "Arıza atakları günde bir kez rastgele bir saatte geldiği için akışta beklemek pratik değil; toplu veride ölçtüğüm atak
+davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek tespit süresini doğrudan ölçeceğim." [deney bitince "ölçtüm" yapılıp sonuç eklenecek]
+
+- *S: Veriyi uydurmuş olmuyor musun?* → C: Atağın oranı ve büyüklüğü gerçek veriden ölçüldü; yalnızca ne zaman başlayacağını ben seçtim.
+  Raporda da "enjeksiyon" diye açıkça yazıyorum. Aynı aracı canlı gösterimde kullanacağım.
+
 ## 7. A2 — susan sensör (B4)
 [doldurulacak]
 

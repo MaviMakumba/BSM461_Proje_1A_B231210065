@@ -6,6 +6,8 @@
             Uyarı süresi ≈ trigger aralığı + yığın süresi. Geç gelen ölçüm de işaretlenir (geç ama kaybolmaz).
   pencere : 10 dk'lık sabit pencerede sensör başına anomali sayısı + en büyük sapma; watermark ile kesinleşir (append).
             Satır ancak pencere bitip watermark geçince çıkar → kesin ama geç.
+  oran    : (K-09b/K-09c, VARSAYILAN) 10 dk pencerede sensörün sıçrama oranı > %1 VE en az 12 sıçrama → normal dışı.
+            update kipi, her yığında güncellenir.
 Kurallar: K-04 earliest · K-09a eşik (bölge × saat, medyan ± 5 × dss) · bölge mesajdan değil sensorler.csv'den alınır
 (mesajlarda bölge eksik olabiliyor, B1/B3) · sensor_id'siz kayıt atılır. Tekrar ayıklama B5'te (K-12) eklenecek.
 
@@ -25,7 +27,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--mod", default="oran", choices=["oran", "anlik", "pencere", "ikisi"],
                 help="oran = K-09b kararı; anlik/pencere/ikisi = B3 karşılaştırma deneyleri")
 ap.add_argument("--oran-esik", type=float, default=1.0, help="K-09b: pencerede sıçrama oranı (%%) eşiği")
-ap.add_argument("--min-olcum", type=int, default=200, help="K-09b: oranın değerlendirilmesi için en az ölçüm (B3'te ölçülüyor)")
+ap.add_argument("--min-sicrama", type=int, default=12, help="K-09c: pencerede en az bu kadar sıçrama (sağlam sensörlerde en çok 8 görüldü)")
 ap.add_argument("--ham-kayit", default=None, help="oran kipi: her yığında güncellenen bütün pencere satırları (analiz için) CSV")
 ap.add_argument("--trigger", type=float, default=2.0, help="mikro-yığın aralığı, saniye (K-08)")
 ap.add_argument("--esik", default="s3a://islenmis/_stub/iot_esik.parquet", help="K-09a eşik tablosu (A'nınki gelince değişecek)")
@@ -130,7 +132,7 @@ oran = (olay.join(F.broadcast(esik_genis), ["bolge", "saat"])
                 F.col("sensor_id").alias("anahtar"),
                 F.round(100 * F.col("anomali_sayisi") / F.col("olcum_sayisi"), 3).alias("deger"),          # oran, %
                 ((100 * F.col("anomali_sayisi") / F.col("olcum_sayisi") > a.oran_esik)
-                 & (F.col("olcum_sayisi") >= a.min_olcum)).alias("esik_asildi"),
+                 & (F.col("anomali_sayisi") >= a.min_sicrama)).alias("esik_asildi"),             # K-09c
                 "olcum_sayisi", "anomali_sayisi", "son_kafka"))
 isaretli_once = set()
 

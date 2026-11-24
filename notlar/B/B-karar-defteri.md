@@ -209,6 +209,43 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
     Kesin sayı, pencere bitip watermark geçince oluşuyor. Hız ve kesinlik iki ayrı an.
   - *"Neden %1?"* → Veride sağlam sensörler en fazla %0,4, arızalılar en az %2,0; %1 boşluğun ortası.
   - *"Tek sıçramayı neden uyarmıyorsunuz?"* → 190 sağlam sensörün hepsinde var; sıçramadan sonraki ölçüm %0,3 ihtimalle anomali, yani bağımsız ölçüm hatası.
+- **Not (25 Kas):** "en az N ölçüm" şartı K-09c ile **"en az 12 sıçrama"** olarak değişti.
+
+### K-09c · Oran kuralının ikinci şartı = **en az 12 sıçrama** (ölçüm sayısı yerine) — `KARAR` (B3, 25 Kas)
+- **Bağlam:** Pencere başında az ölçüm varken oran oynak: 1 sıçrama / 50 ölçüm = %2 → sağlam sensöre yanlış alarm. Bunu önlemenin iki yolu var.
+- **Ölçüm (20 dk akış, 600 sensör-pencere, kanıt `kanit/b3/oran-analiz.txt`):**
+  - "ölçüm ≥ N": yanlış alarm N=200 → 33 · N=500 → 6 · N=1000 → 0. Ama N=1000 = sensör başına ~100 s (10 ölçüm/s) → her pencere başında 100 s kör.
+  - "sıçrama ≥ m": m=8 → 3 · m=10 → 0 · **m=12 → 0**. Sağlam sensörün oran > %1 iken ulaştığı en büyük sıçrama sayısı **8**.
+- **Alternatifler:** (a) ölçüm ≥ 1000 · (b) sıçrama ≥ 10 (sıfır yanlış alarmın sınırında, payı yok) · **(c) sıçrama ≥ 12** (8'in üstünde 4 pay).
+- **Seçim (Eren). Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:** *"Sağlam sensörler 20 dakikalık akışta tesadüfen en fazla 8 sıçramaya
+  ulaştı; 12 eşiği 600 sensör-pencerede sıfır yanlış alarm verirken, yarı yarıya sıçrayan bir arıza atağını birkaç saniyede yakalaması
+  bekleniyor (hesap; enjeksiyonla ölçülecek, K-09d). Ölçüm sayısına dayalı eşik ise her pencere başında 100 saniye kör kalıyordu."*
+- **Kod:** `a1_anomali.py --min-sicrama 12` (varsayılan); `esik_asildi = oran > %1 VE anomali_sayisi ≥ 12`. Bu, otomatik incelemenin
+  "az ölçümlü sensör muaf kalıyor" bulgusunu (#2) da kapattı.
+- **Bedeli / riski (hesap, `[ÖLÇÜLECEK]` K-09d'de):**
+  - 12 sıçrama atakta ~2,4 s'de dolar (10 ölçüm/s × %50 = 5 sıçrama/s) + ~1,1 s sistem gecikmesi ≈ 3,5 s.
+  - ⚠ **Oran seyrelmesi:** Atak pencerenin sonlarına doğru başlarsa, pencerede biriken normal ölçümler oranı aşağı çeker.
+    Pencerenin 9. dakikasında başlayan atakta oranın %1'i geçmesi ~8 s sürer (hesap: (0,003·n + 5t) > 0,01·(n + 10t)).
+    Kabaca pencerenin ikinci yarısında başlayan ataklar 5 s'yi aşabilir. Enjeksiyon deneyi bunu ölçecek; doğrulanırsa çözüm
+    seçenekleri: daha kısa pencere (ör. 1–2 dk), kayan pencere veya "son X ölçümde oran" — o zaman K-09e olarak karar verilecek.
+- **Hoca sorarsa:** *"12 nereden?"* → sağlamlarda en çok 8 gördük, 10 sıfır verdi, 2 adım pay bıraktık. *"Az ölçümlü sensör kaçar mı?"* →
+  Hayır, artık ölçüm sayısına değil sıçrama sayısına bakıyoruz; 12 sıçramayı dolduran her sensör değerlendirilir.
+
+### K-09d · A1'in doğrulanması = **arıza enjeksiyonu** — `KARAR` (B3, 25 Kas), deney bir sonraki oturumda
+- **Bağlam:** Toplu veride arıza her gün bir kez, 10 TX-200 sensöründe aynı anda, ~1–2 saatlik atak (tepe saatte oran %50,28). 20 dk'lık akış
+  deneyine denk gelmedi → kuralın gerçek arızayı yakaladığını akışta henüz görmedik.
+- **Alternatifler:** (a) üreticiyi saatlerce çalıştırıp atağı beklemek · (b) toplu veriyi Kafka'ya yeniden oynatmak (replay) · **(c) enjeksiyon:**
+  normal akış sürerken sensor-050…059 için toplu veride ölçülen atak davranışını (%50 oran, gerçek sapma büyüklükleri, bölge×saat medyanına
+  eklenerek) Kafka'ya basmak.
+- **Seçim (Eren). Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:** *"Arıza atakları günde bir kez rastgele bir saatte geldiği için akışta
+  beklemek pratik değil; toplu veride ölçtüğüm atak davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek tespit süresini
+  doğrudan ölçeceğim."* (deney bitince "ölçtüm" olarak güncellenecek)
+- **Ölçülecekler:** tespit süresi (atak başı → ⚠ satırı) medyan/maks; atağın pencere içindeki başlangıç anına göre (başta / ortada / sonda);
+  aynı sürede yanlış alarm sayısı. Kanıt `kanit/b3/enjeksiyon-*.txt`, satırlar `B.csv`.
+- **Bedeli:** Sentetik atak gerçek atağın kopyası değil, ölçülen özellikleri taşıyan bir modeli. Raporda "enjeksiyon" diye açıkça yazılacak.
+- **Artısı:** Aynı araç canlı gösterimde (B9) ve Z11 kırılma deneyinde (B8) kullanılacak: "şimdi bir arıza başlatıyorum, 3 saniyede uyarı".
+- **Hoca sorarsa:** *"Kendi verinizi kendiniz mi uydurdunuz?"* → Hayır: atağın oranı ve sapma büyüklükleri toplu veriden ölçüldü; yalnızca
+  zamanlamasını biz seçtik, çünkü gerçek atak günde bir kez geliyor.
 
 ---
 
@@ -364,6 +401,7 @@ Sağlam bir sensörün oran > %1 iken ulaştığı en büyük sıçrama sayısı
 
 **Çıkarım (hesap, ölçüm değil):** Atakta sensör saniyede ~10 ölçüm (akış hızında) × %50 = saniyede ~5 sıçrama → m=10 eşiği ~2 s'de dolar.
 Bunun üstüne ~1,1 s sistem gecikmesi gelir. N=1000 kuralında ise her yeni pencerenin başında 100 s beklenir. **Doğrulama için atak enjeksiyonu gerekli.**
+→ Kararlar: K-09c (m = 12), K-09d (enjeksiyon).
 
 ---
 
@@ -383,3 +421,6 @@ Bunun üstüne ~1,1 s sistem gecikmesi gelir. N=1000 kuralında ise her yeni pen
 9. Idempotent üretici açıkken neden tekrar var? → B1 bulgu 3
 10. Tekrarları hangi alanla ayıkladınız; olay kimliği var mı? → B1 bulgu 4, K-12
 11. Kafka sıra garantisi olay zamanı sırası mı? → B1 bulgu 6
+12. Neden 2 s trigger, kart 5 s diyor? → K-08
+13. Tek sıçramaya neden uyarı yok; %1 ve 12 nereden? → K-09b, K-09c
+14. Arızayı akışta gerçekten yakaladınız mı, nasıl gösterdiniz? → K-09d (enjeksiyon)
