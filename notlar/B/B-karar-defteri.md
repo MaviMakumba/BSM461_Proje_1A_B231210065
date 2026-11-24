@@ -291,6 +291,31 @@ standart sapma = 1,4826 × MAD (medyan mutlak sapma). Uç değerlerden etkilenme
 
 ---
 
+## B3 bulguları (2) — A1 gecikme deneyi ve sensör oranları (24 Kas, kanıt: `kanit/b3/gecikme.csv`, `kanit/b3/sensor-orani.txt`)
+
+Deney: `is/olcum/b3_gecikme_deneyi.sh` → her çalıştırmada konu sıfırlanır, `is/akis/a1_anomali.py` açılır, iş hazır olunca üretici
+`--hiz 2000` (kart ortalaması) ile başlar. Gecikme = yığındaki olayın Kafka'ya girişinden yığının işlenmesinin bitişine kadar geçen süre (en kötü = yığındaki en erken olay).
+
+| Çalıştırma | Yığın | En kötü gecikme: ort / p95 / maks | > 5 s yığın |
+|---|---|---|---|
+| anlık, trigger 1 s (120 s) | 122 | 1,05 / 1,22 / 1,77 s | 0 |
+| anlık, trigger 2 s (120 s) | 62 | 2,07 / 2,21 / 2,43 s | 0 |
+| anlık, trigger 5 s (120 s) | 26 | 4,89 / 5,25 / **5,65** s | **18** |
+| anlık, trigger 2 s + pencere aynı anda (840 s) | 427 | 2,04 / 2,22 / 2,61 s | 0 |
+| 10 dk pencere, append, watermark 2 dk (840 s) | 1 pencere | 128–282 s | – |
+
+- **Formül doğrulandı:** en kötü gecikme ≈ trigger + yığın işleme (~0,5–0,6 s). Trigger 5 s, 5 s sınırını **aşıyor**.
+- **Geç ölçüm:** Kafka'ya gelişten itibaren gecikme ~2 s, ama ölçüm anından itibaren **120,9 s**'ye kadar çıkıyor. Ölçüm 2 dk geç geldiği için kaçınılmaz.
+- **Pencere (append):** 14 dk'da yalnızca **1** pencere kesinleşti (pencere bitişi + 2 dk watermark beklenir). Teorik en kötü ~12 dk.
+- 🔴 **Tasarımı değiştiren bulgu:** Anlık yol saniyede **~12 uyarı** üretiyor (1.435 / 120 s). 10 dk penceresinde **200 sensörün 197'si**
+  "eşik aştı" görünüyor. **Tek bir sıçrama, sensörün normal dışı olduğu anlamına gelmiyor.**
+- **Sensör oranları (toplu 3M, K-09a kuralı):** 190 sensör **%0,20–0,40**; 10 sensör (hepsi TX-200, sensor-050…059) **%2,0–2,7**;
+  aradaki %0,4–2,0 bandı **boş**. Arızalı sensörlerde sıçramalar kümeli: anomaliden sonraki ölçüm %36,2 ihtimalle yine anomali
+  (diğerlerinde %0,2–0,5 ≈ taban oranı → bağımsız tekil sıçramalar).
+  → "Normal dışı **sensör**" = anomali **oranı** yüksek sensör. Tekil sıçrama = ölçüm hatası (glitch).
+
+---
+
 ## Önemli gözlemler (karar değil ama sorulabilir)
 - 2026-11-24 · Kit akış iskeleti trigger'ı konsolda 10 s, S3'te 30 s → kartın 5 s uyarısını karşılamaz.
 - 2026-11-24 · Kitte tek Kafka düğümü, replika 1 (`KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1`) → Z0 garanti tablosunda "kopya: 1, üretimde 3" satırı.

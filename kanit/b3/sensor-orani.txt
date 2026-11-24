@@ -1,0 +1,33 @@
+
+## Sensör başına ölçüm sayısı ve anomali oranı (%) — dağılım
+sensor | n_min | n_max | oran_min | p25 | medyan | p75 | oran_max | hic_anomalisi_olmayan
+200 | 10647 | 15756 | 0.197 | 0.268 | 0.3 | 0.327 | 2.681 | 0
+
+## Oran histogramı (%0,1'lik kovalar) ve modeller
+kova | sensor | modeller
+0.1 | 2 | KM-5,SN-10
+0.2 | 99 | TX-200,SN-12,TX-100,KM-5,SN-10
+0.3 | 89 | KM-5,SN-10,TX-100,SN-12,TX-200
+2.0 | 1 | TX-200
+2.1 | 1 | TX-200
+2.2 | 1 | TX-200
+2.3 | 2 | TX-200
+2.4 | 3 | TX-200
+2.5 | 1 | TX-200
+2.6 | 1 | TX-200
+
+## Model bazında sensör oranlarının aralığı (%)
+model | sensor | en_dusuk | medyan | en_yuksek
+KM-5 | 47 | 0.197 | 0.303 | 0.397
+SN-10 | 42 | 0.197 | 0.302 | 0.359
+SN-12 | 37 | 0.209 | 0.291 | 0.395
+TX-100 | 49 | 0.236 | 0.294 | 0.372
+TX-200 | 25 | 0.23 | 0.328 | 2.681
+
+## Sıçramalar kümeli mi? Anomaliden sonraki ölçüm de anomali mi? (sensör içinde zamana göre)
+model | anomali_sonrasi_anomali_yuzde | normal_sonrasi_anomali_yuzde
+KM-5 | 0.33 | 0.297
+SN-10 | 0.21 | 0.295
+SN-12 | 0.49 | 0.3
+TX-100 | 0.19 | 0.295
+TX-200 | 36.17 | 0.728
