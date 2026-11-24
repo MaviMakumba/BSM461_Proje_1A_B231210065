@@ -1,0 +1,10 @@
+tarih,kisi,bilesen,olcum,deger,birim,tekrar,veri_boyutu,makine,not
+2026-11-24,B,Z8,uretici_gonderilen,1168,olay,1,"60 s · --hiz 20",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"uretici.py ciktisi 'toplam 1.168 olay'"
+2026-11-24,B,Z8,kafka_mesaj_sayisi,1171,mesaj,1,"60 s · --hiz 20",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"kafka-get-offsets: b0=402 b1=351 b2=418"
+2026-11-24,B,Z8,birebir_tekrar_mesaj,3,mesaj,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"tamami ayni bolumde ardisik ofset · 1171-3=1168 · is/olcum/b1_kafka_kesif.py"
+2026-11-24,B,Z8,gec_olay_orani_5s_ustu,15.20,%,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"178 mesaj · gecikme=CreateTime-olay_zamani · 5-30 s araliginda hic yok"
+2026-11-24,B,Z8,en_buyuk_gecikme,119.8,s,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"kart: en fazla 2 dk"
+2026-11-24,B,Z8,bolum_en_dolu_bolu_ortalama,1.071,oran,1,"1171 mesaj · 3 bolum · 200 sensor",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"anahtar sensor_id · kit varsayilan 3 bolum"
+2026-11-24,B,Z8,sensor_id_eksik_mesaj,1,mesaj,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"Kafka anahtari bos string"
+2026-11-24,B,Z8,ayni_sensor_ayni_zaman_farkli_deger,38,grup,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"(sensor_id,olay_zamani) benzersiz degil"
+2026-11-24,B,Z8,bolum_ici_olay_zamani_geri_giden,144,mesaj,1,"1171 mesaj",i5-13500H / 13.7 GB RAM / Docker 16 CPU 6.6 GB,"ayni sensorde Kafka sirasi != olay zamani sirasi"

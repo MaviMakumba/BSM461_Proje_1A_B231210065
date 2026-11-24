@@ -68,6 +68,34 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 
 ---
 
+## B1 bulguları — Kafka keşfi (24 Kas, `--hiz 20 --sure 60`, kanıt: `kanit/b1/`, `kanit/olcum/B.csv`)
+
+Betik: `is/olcum/b1_kafka_kesif.py` (konsol tüketici dökümünü sayar; üretici koduna bakılmadı).
+
+| # | Bulgu (ölçülen) | Neyi etkiler |
+|---|---|---|
+| 1 | Mesaj alanları: `olay_zamani` (ISO metin, UTC `Z`), `sensor_id`, `bolge`, `sicaklik`, `nem`, `titresim` (sayılar float). **Olay kimliği (olay_id) YOK.** Kafka anahtarı = `sensor_id`. | şema (B3), tekrar ayıklama K-12 |
+| 2 | Üretici "1.168 gönderildi", Kafka'da **1.171** mesaj → fark **3** = birebir aynı 3 tekrar | watermark deneyi sayımı (B6) |
+| 3 | Tekrarlar **aynı bölümde, ardışık ofsette, aynı CreateTime** ile → üretici **uygulaması iki kez göndermiş**; idempotent üretici açıkken bile Kafka'ya girdi | K-07, K-12 (aşağıda) |
+| 4 | **(sensor_id, olay_zamani) benzersiz değil:** 38 grupta aynı sensör + aynı milisaniye ama değerler farklı | K-12: tekrar anahtarı bu ikili OLAMAZ |
+| 5 | Geç olay (>5 s): **178 / 1.171 = %15,20**; en büyük gecikme **119,8 s**; 5–30 s arası hiç yok; 30–60 s: 59, 60–90 s: 47, 90–120 s: 72 | kartla uyumlu (%15, ≤2 dk) → K-13 |
+| 6 | **144 mesajda** aynı sensörün `olay_zamani` Kafka sırasında **geri gidiyor** | K-06: Kafka *gönderim* sırasını korur, *olay zamanı* sırasını değil |
+| 7 | 1 mesajda `sensor_id` yok, Kafka anahtarı boş metin | kirli kayıt (C'nin Z10'u); A1/A2'de filtre/karantina |
+| 8 | 3 bölüm (kit varsayılanı), 200 farklı sensör, dağılım 402/351/418 → en dolu ÷ ortalama **1,071** | K-05/K-06 ön bilgi (1 dk'lık küçük örnek) |
+| 9 | Kafka yeni açıldığında üretici ilk saniyede `Coordinator load in progress: retrying` uyarısı verdi, sonra devam etti | README notu / B8 |
+
+**Hoca sorarsa (B1'den):**
+- *"Idempotent üretici açıkken neden hâlâ tekrar var?"* → Idempotent üretici yalnızca **ağ/yeniden deneme**
+  kaynaklı çift yazmayı önler (aynı üretici oturumu + sıra numarası). Uygulama aynı olayı **iki ayrı `send`** ile
+  gönderirse Kafka bunları iki farklı mesaj görür. Kanıt: tekrarlar ardışık ofsette, ayrı mesaj olarak duruyor.
+  Bu yüzden tekrar ayıklama **tüketici tarafında** (Spark) yapılmalı.
+- *"Tekrarı hangi alanlarla ayıkladınız?"* → Olay kimliği yok; (sensor_id, olay_zamani) 38 grupta çakışıyor →
+  tüm alanların birleşimi gerekli (K-12, B5'te karar).
+- *"Kafka sırayı garanti ediyor mu?"* → Yalnızca aynı bölüm içinde, **yazılma** sırasını. Olay zamanı sırası değil:
+  144 mesajda geri gitti. Olay zamanı sırasını watermark + pencere ile Spark kurar.
+
+---
+
 ## Önemli gözlemler (karar değil ama sorulabilir)
 - 2026-11-24 · Kit akış iskeleti trigger'ı konsolda 10 s, S3'te 30 s → kartın 5 s uyarısını karşılamaz.
 - 2026-11-24 · Kitte tek Kafka düğümü, replika 1 (`KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1`) → Z0 garanti tablosunda "kopya: 1, üretimde 3" satırı.
@@ -81,3 +109,6 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 6. Teslim garantiniz ne, nasıl kanıtladınız? → K-14
 7. `acks=all` ne sağlıyor, bedeli ne? → K-07
 8. Kafka çökerse ne oluyor? → B8
+9. Idempotent üretici açıkken neden tekrar var? → B1 bulgu 3
+10. Tekrarları hangi alanla ayıkladınız; olay kimliği var mı? → B1 bulgu 4, K-12
+11. Kafka sıra garantisi olay zamanı sırası mı? → B1 bulgu 6

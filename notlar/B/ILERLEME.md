@@ -1,14 +1,14 @@
 # B — İlerleme (Şablon 3 · IoT)
 
-> **Şu an:** B0 — Hazırlık · Son güncelleme: 2026-11-24
+> **Şu an:** B1 — Kafka keşfi (bulgular çıktı, K-04 kararı bekleniyor) · Son güncelleme: 2026-11-24
 > Kapsam (Ş3): **Z8** akış hattı (10) · README + docker-compose (Z12'nin parçası) · canlı gösterim ·
 > Z0 akış okları · Z11 ≥1 deney. (Z3 bu şablonda C'de.)
 > Kararlar → [`B-karar-defteri.md`](B-karar-defteri.md) · Ölçümler → `kanit/olcum/B.csv`
 
 | # | Bölüm | Çıktı | Hedef | Durum |
 |---|---|---|---|---|
-| B0 | Hazırlık | `rol-b` dalı, compose güncel, not dosyaları, README taslağı | 25 Kas | ⏳ |
-| B1 | Kafka keşfi | 20 olay incelemesi; geç + tekrar olay örneği (→ C) | 25 Kas | ☐ |
+| B0 | Hazırlık | `rol-b` dalı, compose güncel, not dosyaları, README taslağı | 25 Kas | ⏳ yalnız README notu (K-02 cevabı) |
+| B1 | Kafka keşfi | 20 olay incelemesi; geç + tekrar olay örneği (→ C) | 25 Kas | ⏳ bulgular ✅, K-04 bekliyor |
 | B2 | Konu tasarımı | bölüm sayısı hesabı, anahtar, acks/idempotent ölçümü | 27 Kas | ☐ |
 | B3 | A1 — anomali | konsolda çalışan sorgu (5 s uyarı) | 29 Kas | ☐ |
 | B4 | A2 — susan sensör | konsolda çalışan sorgu | 30 Kas | ☐ |
@@ -35,3 +35,5 @@
   değişikliğinin nedeni? (README'ye yazılacak)
 - **A:** A1/A2'deki "anomali" tanımını T2 ile ortak yapalım (K-03).
 - **Herkes:** main'i çekip `docker compose up -d` (Kafka konteyneri yeniden yaratılır; mevcut konular silinir — zaten kalıcı değildi).
+- **C (veri sözlüğü için hazır):** geç olay, tekrar ve kirli kayıt örnekleri → `kanit/b1/ilk-20-mesaj.txt`,
+  `kanit/b1/kafka-kesif-ozet.txt`. Alan listesi ve tipleri de orada. Olay kimliği alanı yok.
