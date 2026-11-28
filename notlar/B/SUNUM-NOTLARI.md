@@ -273,4 +273,52 @@ davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek
   oranının sensör modeli ve kurulum yılına göre karşılaştırması. Ham JSON 430,6 MB, Parquet 45,2 MB
   (A satır sayılarını eşitleyip yeniden ölçecek). [A'nın kararları geldikçe eklenecek]
 - **Ortak:** "Anomali" tanımı akışta (A1) ve toplu tarafta (T2) aynı eşik tablosundan geliyor → iki taraf tutarlı.
+- **C (temizleme, servis, pano):** Z10: tekrarları ve eksik/hatalı kayıtları ayırıp temiz veriyi tarih bölümlü Parquet'e yazdı
+  (JSON → Parquet %81 küçülme). Z6: özetleri MongoDB'ye koydu, 1.000 sorguda p99 0,46 ms. Pano `http://localhost:8000`, benim akış
+  tablolarımı (`akis_iot_a1/_a2`) okuyup gösteriyor. (C'nin sayıları K-15 sonrası yeniden üretilecek.)
+
+## 13. Ekipte sayılar neden tutmuyordu? (K-15) — "aynı tarif, farklı gün"
+**Basit anlatım:** Kitin veri üreticisi, verinin 14 gününü "bugünden geriye" sayıyor. Ben veriyi 24 Kasım'da ürettim, C başka bir gün.
+Aynı grup kodunu kullandık ama farklı veri çıktı: bende 6.050 tekrar kayıt, C'de 6.030.
+
+**Benzetme:** Aynı sırada dizilmiş bir zar dizisi düşün (grup kodu bunu belirliyor). Her olay bu diziden sırayla zar çekiyor. Arıza
+saati takvim tarihinden hesaplanıyor; arıza saatine düşen bir olay fazladan zar çekiyor. Tarih değişince arıza başka saate düşüyor,
+fazladan zarlar başka yerde çekiliyor ve o andan sonra herkesin eline başka zar geliyor. Ayrıca bütün zaman damgaları bir gün kayıyor.
+
+**Teknik ayrıntı:**
+- `uretici.py` toplu üretim: `bitis = datetime.now()` (UTC gece yarısı), günler = bitiş − 14 … bitiş − 1.
+- Arıza saati = `crc32("YYYY-AA-GG" + tuz) % 24` → tarihe bağlı.
+- Önce yöntem farkından şüphelendim. Ölçtüm: bizim veride Spark `dropDuplicates`, DuckDB `DISTINCT` hepsi 6.050 veriyor. Yani fark veride.
+- Çözüm: üreticiye `--son-gun 2026-11-23` seçeneği ekledim (varsayılan davranış değişmedi).
+
+**Ölçülen sayı:** Eski 24 Kas verisini yedekledim, yeni seçenekle yeniden ürettim, her günün satırlarını sıralayıp sha256 aldım:
+**14 günün 14'ü birebir aynı.** Artık herkes (hoca dahil) README'deki tek komutla aynı 3.000.000 kaydı alıyor.
+
+**Hoca sorarsa:**
+- *"Kiti neden değiştirdiniz?"* → Varsayılanı değiştirmedim, sadece tarih sabitleme seçeneği ekledim; README'de "Kitten farklarımız" tablosunda.
+- *"Ben şimdi çalıştırsam sizin sayıları alır mıyım?"* → `--son-gun 2026-11-23` verirseniz evet, birebir.
+
+## 14. Kendi kodumda bulduğum hata (eşik tablosu) — "hata bulup ölçmek"
+**Basit anlatım:** Eşik tablosunu hesaplarken tekrar kayıtları silmek istedim ama silme işlemini yanlış sütunlarla yaptım. Gerçekte farklı
+olan ama bölgesi, saati ve değerleri tesadüfen aynı olan 4.696 ölçümü de silmişim.
+
+**Örnek:** Marmara'da saat 14'te iki farklı sensör aynı anda 25,14 °C, %47,9 nem, 0,071 titreşim ölçmüş olabilir. Bunlar iki gerçek ölçüm.
+Ben sadece (bölge, saat, değerler) sütunlarına bakarak "aynı" dediğim için birini attım. Doğrusu: önce bütün satıra bakıp tekrarı silmek
+(sensör ve zaman dahil), sonra sütun seçmek.
+
+**Ölçülen etki:** 168 bölge×saat hücresinin birkaçında eşik çok az değişti (medyan en çok 0,01 °C; dağılım en çok %3).
+Sıcaklık anomalisi sayısı **11.926 → 11.926, hiç değişmedi.** Düzelttim, tablo yeniden yazıldı.
+
+**Hoca sorarsa:** *"Hiç hata yaptınız mı?"* → Evet; bulduk, etkisini ölçtük, defterde duruyor (K-09a düzeltme notu).
+
+## 15. Pano benim tablolarımı nasıl okumalı? (Delta okuma) — K-11 hazırlığı
+**Basit anlatım:** Delta tablosu bir klasör + bir "içindekiler" defteri (`_delta_log`). Bir satırı güncellediğimde eski dosya silinmiyor,
+deftere "bu dosya artık geçersiz" diye not düşülüyor. Klasördeki bütün `.parquet` dosyalarını doğrudan okuyan, eski satırları da görür.
+
+**Ölçülen:** Küçük bir tabloya iki kez üzerine yazdım. Spark ve DuckDB `delta_scan` **100** satır görüyor (doğru). Klasördeki
+`*.parquet` dosyalarını düz okuyan **200** satır görüyor (eski sürüm dahil). A1 her yığında MERGE ile güncellendiği için (K-09b) bu
+fark bizim tabloda kesin ortaya çıkar → C'nin panosu `delta_scan` kullanmalı.
+
+**Hoca sorarsa:** *"Panonuz neden eski uyarı göstermiyor?"* → Delta'yı defteriyle birlikte okuyoruz; düz Parquet okumanın neden yanlış
+olduğunu ölçtük (200 ↔ 100).
 - **C (servis/pano/kalite):** [eklenecek]

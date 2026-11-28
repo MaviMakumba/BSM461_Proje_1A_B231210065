@@ -247,6 +247,53 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 - **Hoca sorarsa:** *"Kendi verinizi kendiniz mi uydurdunuz?"* → Hayır: atağın oranı ve sapma büyüklükleri toplu veriden ölçüldü; yalnızca
   zamanlamasını biz seçtik, çünkü gerçek atak günde bir kez geliyor.
 
+### K-15 · Ortak toplu veri = **`--son-gun 2026-11-23` ile sabitlenmiş üretim** (kite 1 seçenek eklendi) — `ÖLÇÜLDÜ` (B5 hazırlık, 28 Kas)
+- **Belirti:** C'nin Z10 sayıları bizimkiyle tutmadı: tekrar C'de 6.030, bizde 6.050; boş `sensor_id` C'de 1.193, bizde 1.215; ham boyut C'de 430.607.335,
+  bizde 430.604.846 bayt. C'nin örnek satırları bizim veride **hiç yok** (0 satır).
+- **Yöntem farkı değil (ölçüldü):** Bizim veride Spark `dropDuplicates()`, Spark metin `distinct`, DuckDB `count(DISTINCT …)` ve `SELECT DISTINCT *`
+  dördü de **6.050** buluyor. C'nin geçerlilik kuralıyla karantina bizde de 6.038. Kanıt `kanit/b5/c-veri-farki.txt`.
+- **Kök neden:** `araclar/uretici.py` toplu üretimde 14 günü **bugünden geriye** sayıyor (`datetime.now()`). Gün değişince (1) bütün zaman damgaları
+  kayıyor, (2) arıza saati takvim tarihinden hesaplanıyor (`_gun_tohumu`), arıza saatine düşen olaylar zar dizisinden fazladan sayı çekiyor
+  → o andan sonraki bütün kayıtlar (değerler, tekrarlar, bozuk kayıtlar) farklılaşıyor. "Aynı kod = aynı veri" ancak **aynı gün** üretilirse doğru.
+- **Alternatifler:** (a) `--son-gun` seçeneği: kite ~4 satır, varsayılan davranış aynı · (b) Eren'in 14 dosyasını (~410 MB) Drive'dan paylaşmak:
+  kit değişmez ama hoca kendi makinesinde aynı veriyi üretemez, dosyanın doğru kopyası olduğunu herkes ayrıca kontrol etmek zorunda ·
+  (c) farkı kabul edip "her üye kendi verisi" yazmak: raporda yan yana duran sayılar çelişir, savunulamaz.
+- **Seçim: (a), tarih 2026-11-23. Gerekçe cümlesi asistan taslağıdır, Eren kabul etti (28 Kas):** *"Aynı grup kodu farklı günde farklı veri ürettiği
+  için üreticiye son günü sabitleyen bir seçenek ekledim. 24 Kas'ta ürettiğim veriyi bu seçenekle yeniden ürettim ve 14 günün 14'ünde sha256
+  birebir aynı çıktı. Böylece ekipteki herkes ve hoca tek komutla aynı veriyi elde ediyor."*
+- **Neden 23 Kas (24 Kas üretimi):** Verisi en çok karara bağlı üye B (K-09a eşik tablosu, arıza saatleri, sensör oranları). Bu tarihle B'nin
+  ölçümleri geçerli kalıyor. C her durumda yeniden çalıştırmak zorundaydı (verisi zaten farklı). A'nın üretim günü soruluyor; aynıysa A'ya iş yok.
+- **Doğrulama (ölçüldü, 28 Kas):** Yeniden üretim öncesi veri `s3://islenmis/_yedek/ham_iot_24kas/` altına yedeklendi. Gün başına sıralı satırların
+  sha256'sı: **14/14 gün birebir aynı**, üretici yine "6.050 tekrar" yazdı. (Dosya adları `parca-<uuid>` rastgele, içerik aynı.)
+- **Bedeli:** Kit dosyası değişti → hoca kiti güncellerse bu 4 satır yeniden uygulanmalı (README "Kitten farklarımız" tablosunda). C'nin Z10/Z3/Z6
+  sayıları birkaç kayıt değişecek (oranlar aynı, ~%0,2).
+- **Hoca sorarsa:**
+  - *"Kitin üreticisini neden değiştirdiniz?"* → Varsayılanı değiştirmedik, yalnızca tarih sabitleme seçeneği ekledik. Ekipte iki üye farklı günlerde
+    üretince sayılar tutmamıştı. Eski veriyle birebir aynı olduğunu sha256 ile gösterdik.
+  - *"Raporunuzdaki sayıları ben de üretebilir miyim?"* → Evet: README'deki tek komutla, hangi gün çalıştırırsanız çalıştırın.
+
+### K-16 · Akış çıktılarına (`akis_iot_a1`, `akis_iot_a2`) **`bolge` sütunu** eklenir; `model` eklenmez — `KARAR` (B5 hazırlık, 28 Kas)
+- **Bağlam:** C'nin panosu uyarı tablolarında bölge ve model gösteriyor, bölgeye göre süzüyor. Sözleşmedeki (ORTAK §6.3) A1/A2 satırında yalnızca
+  `anahtar` (= sensor_id) var → pano bölge süzgecinde boş liste döner.
+- **Alternatifler:** (a) B `bolge` ekler · (b) C her satırı kendi `sensor_ozet` tablosuyla eşleştirir · (c) B hem `bolge` hem `model` ekler.
+- **Seçim: (a) `bolge` evet, `model` hayır. Gerekçe cümlesi asistan taslağıdır, Eren kabul etti (28 Kas):** *"A1 eşiği zaten bölge × saat
+  bazında olduğu için akış işi her ölçümün bölgesini biliyor (`sensorler.csv` ile eşleştiriyor), yani `bolge` bizim için bedava ve tabloyu kendi
+  başına okunur kılıyor. Model ise kararda kullanılmayan bir boyut bilgisi; onu servis katmanının (C) eklemesi doğru, yoksa aynı bilgiyi iki
+  yerde tutmuş oluruz."*
+- **Sözleşme etkisi:** Sütun **eklenir**, mevcut sütunlar değişmez → geriye uyumlu. ORTAK §6.3'e yazılacak, C'ye bildirilecek.
+- **Hoca sorarsa:** *"Model bilgisi neden akış çıktısında yok?"* → Akış kararı modele bakmıyor. Boyut bilgisini servis katmanında eşleştirmek,
+  sensörün modeli değişirse tek yerden düzeltmeyi sağlar.
+
+### Düzeltme (28 Kas) · Eşik stub'ında tekrar ayıklama yanlış sütunlarla yapılıyordu (K-09a'yı etkiler, sonucu değiştirmedi)
+- **Hata:** `is/akis/esik_stub.py`, `DISTINCT`'i sütunları (bölge, saat, değerler) seçtikten **sonra** uyguluyordu. Bu, gerçek tekrarlarla birlikte
+  **farklı sensör/zamandan gelip aynı bölge-saat-değerlere sahip** ölçümleri de siliyordu.
+- **Ölçülen etkisi:** 2.992.738 yerine 2.988.042 satır (4.696 gerçek ölçüm yanlışlıkla atılmıştı). 168 bölge×saat hücresinin medyan ve dss'si:
+  sıcaklıkta 12 hücre değişti (medyan en çok 0,01; dss en çok %1,49), nemde 2 hücre (medyan 0,1), titreşimde 8 hücre (dss en çok %3,03).
+  **Sıcaklık anomalisi sayısı değişmedi: 11.926 → 11.926.**
+- **Düzeltme:** Tekrar artık tüm ham satır üzerinden ayıklanıyor (`SELECT DISTINCT *`, sonra projeksiyon). Stub yeniden yazıldı (504 satır).
+  Diğer B3 betikleri `sensor_id` + zaman dahil ayıkladığı için etkilenmedi (kontrol edildi).
+- **Hoca sorarsa:** *"Eşiklerinizde hata çıktı mı?"* → Evet, bir tane. Bulduk, etkisini ölçtük, sonuç değişmedi; defterde duruyor.
+
 ---
 
 ## Bekleyen kararlar (bölüm geldikçe yukarıya taşınır)
@@ -254,7 +301,7 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 | Kod | Karar | Bölüm | Ölçüm planı (kısa) |
 |---|---|---|---|
 | K-10 | A2 yöntemi: durumlu (state) ↔ pencere + `sensorler.csv` | B4 | yanlış alarm (geç veri ↔ susma) |
-| K-11 | Çıkış kipi (append/update) ve sink (Delta) | B5 | — |
+| K-11 | Çıkış kipi (append/update) ve sink (Delta). Not (28 Kas): A1 K-09b gereği MERGE → Delta eski dosyaları klasörde bırakır; okuyan taraf `delta_scan` kullanmalı (ölçüldü: düz okuma 200, doğrusu 100). Akış tabloları bölümlenmeyecek (`partitionBy` yok) | B5 | — |
 | K-12 | Tekrar ayıklama anahtarı (`dropDuplicates` + watermark) | B5 | önce/sonra sayım |
 | K-13 | Watermark süresi | B6 | kart oranı ↔ 0,3 → kaçırılan olay sayısı |
 | K-14 | Teslim garantisi (en az bir kez ↔ tam bir kez) | B7 | yeniden başlatmada kayıp/çift sayım |
@@ -424,3 +471,5 @@ Bunun üstüne ~1,1 s sistem gecikmesi gelir. N=1000 kuralında ise her yeni pen
 12. Neden 2 s trigger, kart 5 s diyor? → K-08
 13. Tek sıçramaya neden uyarı yok; %1 ve 12 nereden? → K-09b, K-09c
 14. Arızayı akışta gerçekten yakaladınız mı, nasıl gösterdiniz? → K-09d (enjeksiyon)
+15. Raporunuzdaki sayıları ben üretebilir miyim; ekipte sayılar neden tutmuyordu? → K-15
+16. Akış çıktısında neden model yok? → K-16

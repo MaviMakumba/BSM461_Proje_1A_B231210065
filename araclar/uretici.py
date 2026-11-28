@@ -312,7 +312,10 @@ def akis(a, olay, anahtar, r):
 def toplu(a, olay, r):
     istemci = s3()
     gun_sayisi = a.gun
-    bitis = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    if a.son_gun:                                 # K-15: sabit tarih → her makinede, her gün aynı veri
+        bitis = datetime.strptime(a.son_gun, "%Y-%m-%d").replace(tzinfo=timezone.utc) + timedelta(days=1)
+    else:
+        bitis = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
     gunler = [bitis - timedelta(days=g) for g in range(gun_sayisi, 0, -1)]
     g = veri_ayarlari(a.grup, a.sablon)
     gun_ag = g.get("gun_agirlik", [1.0] * 7)                           # Pzt…Paz
@@ -362,6 +365,7 @@ if __name__ == "__main__":
     ap.add_argument("--konu", default=None, help="akış: Kafka konusu (varsayılan şablona göre)")
     ap.add_argument("--toplu", type=int, default=0, help="toplu: S3'e yazılacak olay sayısı")
     ap.add_argument("--gun", type=int, default=7, help="toplu: kaç günlük geçmiş (varsayılan 7)")
+    ap.add_argument("--son-gun", default=None, help="toplu: verinin son günü YYYY-AA-GG (varsayılan: dün, UTC) — K-15")
     ap.add_argument("--grup", default=None, help="grup kodu: üyelerin en küçük öğrenci numarası (verinizi belirler)")
     ap.add_argument("--gec-orani", type=float, default=None, help="geç olay oranı (varsayılan: senaryo kartınızdaki)")
     ap.add_argument("--gec-en-fazla-dk", type=int, default=None, help="geç olay en fazla kaç dk (varsayılan: senaryo kartı)")

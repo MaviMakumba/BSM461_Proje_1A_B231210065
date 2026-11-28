@@ -1,4 +1,4 @@
-﻿# BSM 461 Dönem Projesi — Başlangıç Kiti
+# BSM 461 Dönem Projesi — Başlangıç Kiti
 #
 #   docker compose up -d                          # çekirdek: Kafka + S3 + Spark + araçlar
 #   docker compose --profile arama up -d          # + Elasticsearch   (şablon 1 ve 4)
@@ -168,4 +168,3 @@ volumes:
   s3-veri:
   spark-ivy:
   es-veri:
-

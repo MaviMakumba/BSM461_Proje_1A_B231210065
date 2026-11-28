@@ -13,9 +13,9 @@ con.execute("INSTALL httpfs; LOAD httpfs;")
 con.execute("SET s3_endpoint='s3:8333'; SET s3_use_ssl=false; SET s3_url_style='path';"
             "SET s3_access_key_id='bsm461'; SET s3_secret_access_key='bsm461-gizli'; SET s3_region='us-east-1';")
 con.execute("""
-CREATE TABLE t AS SELECT DISTINCT s.bolge, hour(TRY_CAST(h.olay_zamani AS TIMESTAMP)) saat, h.sicaklik, h.nem, h.titresim
-FROM read_json('s3://ham/iot/tarih=*/*.jsonl', format='newline_delimited',
-     columns={'olay_zamani':'VARCHAR','sensor_id':'VARCHAR','sicaklik':'DOUBLE','nem':'DOUBLE','titresim':'DOUBLE'}) h
+CREATE TABLE t AS SELECT s.bolge, hour(TRY_CAST(h.olay_zamani AS TIMESTAMP)) saat, h.sicaklik, h.nem, h.titresim
+FROM (SELECT DISTINCT * FROM read_json('s3://ham/iot/tarih=*/*.jsonl', format='newline_delimited',
+     columns={'olay_zamani':'VARCHAR','sensor_id':'VARCHAR','sicaklik':'DOUBLE','nem':'DOUBLE','titresim':'DOUBLE'})) h  -- tekrar: TÜM satır (28 Kas düzeltmesi)
 JOIN read_csv('s3://ham/boyut/iot/sensorler.csv', header=true) s USING (sensor_id)""")
 con.execute("""
 COPY (
