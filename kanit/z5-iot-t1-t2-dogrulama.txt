@@ -1,0 +1,25 @@
+BSM 461 | Grup B231210065 | Rol A | Z5 iot_t1 ve iot_t2 Doğrulama Kanıtı
+Tarih: 2026-11-28
+Veri: K-15 (--son-gun 2026-11-23, 3.000.000 ham satır, 14 gün: 2026-11-10 .. 2026-11-23)
+Üretim komutu: docker compose exec -T spark spark-submit is/iot_t1_t2.py
+
+Girdi Özeti:
+- Ham satır: 3.000.000
+- Tekrar ayıklama (dropDuplicates): 2.993.950 (6.050 tam tekrar elendi)
+- sensorler.csv inner join sonrası temiz girdi: 2.992.738 (1.212 sensor_id eşleşmeyen kayıt elendi)
+- Referans sensör medyanı (200 sensör, 14 gün): 15.346,5 ölçüm (~78,8 sn/ölçüm)
+- Toplam üretim süresi: 23.83 sn
+
+Çıktı 1 — s3a://tablolar/iot_t1 (Delta Lake):
+- Satır sayısı: 2.352 (14 gün × 24 saat × 7 bölge)
+- Sütunlar: tarih (date), saat (int), bolge (string), ort_sicaklik (double), ort_nem (double), ort_titresim (double), olcum_sayisi (long)
+- DuckDB okuma doğrulaması (read_parquet): 2.352 satır, tüm sütunlar doğrulandı
+
+Çıktı 2 — s3a://tablolar/iot_t2 (Delta Lake):
+- Satır sayısı: 39 (model × kurulum_yili)
+- Sütunlar: model (string), kurulum_yili (int), sensor_sayisi (int), gerceklesen_olcum (long), beklenen_olcum (double), anomali_sayisi (long), anomali_orani (double), veri_kaybi_orani (double)
+- Anomali kuralı: K-09a (s3a://tablolar/iot_esik; |x - medyan| > 5 * dss)
+- Veri kaybı formülü: sensör başına max(0, 15346.5 - olcum_sayisi) toplamının (sensor_sayisi × 15346.5) değerine yüzdelik oranı
+- Öne çıkan anomali grupları: TX-200 2022 (%1.6860), TX-200 2020 (%1.6232), TX-200 2023 (%1.3140), TX-200 2025 (%0.8150), TX-200 2019 (%0.6802)
+- Öne çıkan veri kaybı grupları: SN-10 2025 (%27.3450), SN-12 2023 (%17.6542), TX-100 2020 (%14.8576), TX-200 2019 (%10.0300)
+- DuckDB okuma doğrulaması (read_parquet): 39 satır, tüm sütunlar doğrulandı
