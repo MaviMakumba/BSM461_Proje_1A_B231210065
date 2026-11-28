@@ -1,0 +1,55 @@
+# K-09d enjeksiyon sonucu · etiketler enj1 · A1 oran kuralı (>%1 ve ≥12 sıçrama, 10 dk pencere, trigger 2 s)
+
+## Konuma göre tespit süresi (s) — konum = atağın 10 dk'lık pencere içinde başladığı saniye
+konum_s | tespit_edilen | en_az | medyan | en_cok | 5 s içinde
+5 | 10/10 | 2.76 | 2.76 | 2.76 | 10/10
+300 | 10/10 | 2.38 | 4.44 | 4.44 | 10/10
+570 | 10/10 | 2.38 | 4.45 | 6.34 | 7/10
+595 | 10/10 | 5.36 | 5.36 | 5.36 | 0/10
+TÜMÜ | 40/40 | 2.38 | 4.44 | 6.34 | 27/40
+
+## Yanlış alarm: saldırılmayan sensörde ⚠ = 1 · saldırılan sensörde atak dışı ⚠ = 0
+  enj1 sensor-129 pencere 2026-11-28 12:00:00 · 12/966
+
+## Sensör başına
+etiket | konum_s | sensor | tespit_s | hangi_pencere | ilk ⚠ anında anomali/ölçüm
+enj1 | 5 | sensor-050 | 2.76 | aynı | 30/99
+enj1 | 5 | sensor-051 | 2.76 | aynı | 31/84
+enj1 | 5 | sensor-052 | 2.76 | aynı | 30/74
+enj1 | 5 | sensor-053 | 2.76 | aynı | 30/80
+enj1 | 5 | sensor-054 | 2.76 | aynı | 31/103
+enj1 | 5 | sensor-055 | 2.76 | aynı | 30/105
+enj1 | 5 | sensor-056 | 2.76 | aynı | 30/95
+enj1 | 5 | sensor-057 | 2.76 | aynı | 30/103
+enj1 | 5 | sensor-058 | 2.76 | aynı | 30/91
+enj1 | 5 | sensor-059 | 2.76 | aynı | 30/89
+enj1 | 300 | sensor-050 | 4.44 | aynı | 48/2952
+enj1 | 300 | sensor-051 | 2.38 | aynı | 33/2884
+enj1 | 300 | sensor-052 | 2.38 | aynı | 27/2139
+enj1 | 300 | sensor-053 | 4.44 | aynı | 45/2926
+enj1 | 300 | sensor-054 | 4.44 | aynı | 47/2940
+enj1 | 300 | sensor-055 | 4.44 | aynı | 46/2900
+enj1 | 300 | sensor-056 | 2.38 | aynı | 35/2863
+enj1 | 300 | sensor-057 | 4.44 | aynı | 47/2913
+enj1 | 300 | sensor-058 | 2.38 | aynı | 33/2919
+enj1 | 300 | sensor-059 | 4.44 | aynı | 47/2927
+enj1 | 570 | sensor-050 | 4.45 | aynı | 60/5575
+enj1 | 570 | sensor-051 | 4.45 | aynı | 62/5608
+enj1 | 570 | sensor-052 | 2.38 | aynı | 40/3881
+enj1 | 570 | sensor-053 | 4.45 | aynı | 59/5634
+enj1 | 570 | sensor-054 | 4.45 | aynı | 61/5522
+enj1 | 570 | sensor-055 | 6.34 | aynı | 71/5629
+enj1 | 570 | sensor-056 | 6.34 | aynı | 70/5616
+enj1 | 570 | sensor-057 | 4.45 | aynı | 58/5531
+enj1 | 570 | sensor-058 | 6.34 | aynı | 75/5554
+enj1 | 570 | sensor-059 | 4.45 | aynı | 60/5625
+enj1 | 595 | sensor-050 | 5.36 | aynı | 59/5692
+enj1 | 595 | sensor-051 | 5.36 | aynı | 66/5940
+enj1 | 595 | sensor-052 | 5.36 | aynı | 58/4084
+enj1 | 595 | sensor-053 | 5.36 | aynı | 64/5725
+enj1 | 595 | sensor-054 | 5.36 | aynı | 66/5901
+enj1 | 595 | sensor-055 | 5.36 | aynı | 66/5738
+enj1 | 595 | sensor-056 | 5.36 | aynı | 69/5956
+enj1 | 595 | sensor-057 | 5.36 | aynı | 69/5789
+enj1 | 595 | sensor-058 | 5.36 | aynı | 68/5702
+enj1 | 595 | sensor-059 | 5.36 | aynı | 63/5768

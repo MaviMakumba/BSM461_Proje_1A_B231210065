@@ -1,0 +1,32 @@
+# Arıza atağının veriden ölçülen özellikleri (K-09d girdisi) · toplu veri --son-gun 2026-11-23 · eşik K-09a stub
+
+## Günlük atak saati (UTC) ve arızalı 10 sensörün o saatteki anomali payı (%)
+gun | atak_saati_utc | anomali_payi
+2026-11-10 | 3 | 52.1
+2026-11-11 | 13 | 49.54
+2026-11-12 | 0 | 50.89
+2026-11-13 | 18 | 51.54
+2026-11-14 | 2 | 47.24
+2026-11-15 | 16 | 47.28
+2026-11-16 | 13 | 51.29
+2026-11-17 | 19 | 52.12
+2026-11-18 | 13 | 51.42
+2026-11-19 | 11 | 51.68
+2026-11-20 | 20 | 49.06
+2026-11-21 | 14 | 50.0
+2026-11-22 | 7 | 49.12
+2026-11-23 | 9 | 49.88
+
+## Atak saatinde, sensör başına anomali payı (%) — dağılım (14 gün × 10 sensör)
+dilim | en_az | c1 | medyan | c3 | en_cok | dilim_basina_olcum
+140 | 30.4 | 45.4 | 50.5 | 54.5 | 69.4 | 44.1
+
+## Atak saatindeki ANORMAL ölçümlerin medyandan farkı (ham birim)
+olcu | y5 | medyan | y95
+sicaklik | 16.36 | 27.2 | 38.65
+nem | -4.1 | -0.1 | 4.0
+titresim | 1.422 | 2.57 | 3.691
+
+## Atak saatinde aynı sensörlerin NORMAL ölçümlerinin medyandan farkı (kıyas)
+sicaklik | nem | titresim | olcum
+-0.01 | 0.0 | 0.0 | 3072

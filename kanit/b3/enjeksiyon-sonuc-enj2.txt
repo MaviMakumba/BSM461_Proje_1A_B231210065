@@ -1,0 +1,54 @@
+# K-09d enjeksiyon sonucu · etiketler enj2 · A1 oran kuralı (etiketin kuralı için karar defterine bak: enj1 = 10 dk sabit/≥12, enj2 = 1 dk kayan/≥15; trigger 2 s)
+
+## Konuma göre tespit süresi (s) — konum = atağın 10 dk'lık pencere içinde başladığı saniye
+konum_s | tespit_edilen | en_az | medyan | en_cok | 5 s içinde
+5 | 10/10 | 3.0 | 3.0 | 3.0 | 10/10
+300 | 10/10 | 2.62 | 2.62 | 2.62 | 10/10
+570 | 10/10 | 2.56 | 2.56 | 2.56 | 10/10
+595 | 10/10 | 3.67 | 3.67 | 3.67 | 10/10
+TÜMÜ | 40/40 | 2.56 | 2.81 | 3.67 | 40/40
+
+## Yanlış alarm: saldırılmayan sensörde ⚠ = 0 · saldırılan sensörde atak dışı ⚠ = 0
+
+## Sensör başına
+etiket | konum_s | sensor | tespit_s | uyari_penceresi_bas | ilk ⚠ anında anomali/ölçüm
+enj2 | 5 | sensor-050 | 3.0 | 15:59:50 | 30/181
+enj2 | 5 | sensor-051 | 3.0 | 15:59:50 | 30/175
+enj2 | 5 | sensor-052 | 3.0 | 15:59:10 | 32/383
+enj2 | 5 | sensor-053 | 3.0 | 15:59:20 | 30/396
+enj2 | 5 | sensor-054 | 3.0 | 15:59:20 | 31/416
+enj2 | 5 | sensor-055 | 3.0 | 15:59:30 | 30/330
+enj2 | 5 | sensor-056 | 3.0 | 16:00:00 | 31/95
+enj2 | 5 | sensor-057 | 3.0 | 15:59:40 | 31/260
+enj2 | 5 | sensor-058 | 3.0 | 16:00:00 | 31/104
+enj2 | 5 | sensor-059 | 3.0 | 15:59:30 | 30/334
+enj2 | 300 | sensor-050 | 2.62 | 16:14:20 | 20/391
+enj2 | 300 | sensor-051 | 2.62 | 16:14:20 | 20/362
+enj2 | 300 | sensor-052 | 2.62 | 16:14:20 | 21/274
+enj2 | 300 | sensor-053 | 2.62 | 16:15:00 | 19/38
+enj2 | 300 | sensor-054 | 2.62 | 16:14:50 | 20/123
+enj2 | 300 | sensor-055 | 2.62 | 16:14:50 | 20/115
+enj2 | 300 | sensor-056 | 2.62 | 16:14:10 | 23/443
+enj2 | 300 | sensor-057 | 2.62 | 16:14:10 | 20/426
+enj2 | 300 | sensor-058 | 2.62 | 16:14:50 | 21/124
+enj2 | 300 | sensor-059 | 2.62 | 16:14:10 | 20/447
+enj2 | 570 | sensor-050 | 2.56 | 16:28:50 | 24/389
+enj2 | 570 | sensor-051 | 2.56 | 16:29:00 | 22/290
+enj2 | 570 | sensor-052 | 2.56 | 16:28:40 | 26/324
+enj2 | 570 | sensor-053 | 2.56 | 16:29:10 | 20/194
+enj2 | 570 | sensor-054 | 2.56 | 16:29:20 | 20/111
+enj2 | 570 | sensor-055 | 2.56 | 16:29:10 | 21/202
+enj2 | 570 | sensor-056 | 2.56 | 16:29:10 | 20/200
+enj2 | 570 | sensor-057 | 2.56 | 16:29:30 | 19/46
+enj2 | 570 | sensor-058 | 2.56 | 16:29:20 | 20/119
+enj2 | 570 | sensor-059 | 2.56 | 16:29:20 | 21/121
+enj2 | 595 | sensor-050 | 3.67 | 16:39:50 | 30/106
+enj2 | 595 | sensor-051 | 3.67 | 16:39:20 | 30/340
+enj2 | 595 | sensor-052 | 3.67 | 16:39:50 | 30/69
+enj2 | 595 | sensor-053 | 3.67 | 16:39:10 | 31/408
+enj2 | 595 | sensor-054 | 3.67 | 16:39:50 | 30/95
+enj2 | 595 | sensor-055 | 3.67 | 16:39:10 | 30/419
+enj2 | 595 | sensor-056 | 3.67 | 16:39:50 | 31/102
+enj2 | 595 | sensor-057 | 3.67 | 16:39:40 | 30/156
+enj2 | 595 | sensor-058 | 3.67 | 16:39:40 | 30/177
+enj2 | 595 | sensor-059 | 3.67 | 16:39:50 | 30/100

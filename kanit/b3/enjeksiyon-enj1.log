@@ -1,0 +1,9 @@
+→ 10 sensör · 3102 ölçülmüş atak sapması · konumlar 5,300,570,595 · 10/s/sensör · 30.0 s
+… atak 0: konum 5 s · pencere 12:00 · 440 s bekleniyor
+✓ atak 0: 3000 anormal ölçüm · 29.4 s
+… atak 1: konum 300 s · pencere 12:10 · 865 s bekleniyor
+✓ atak 1: 3000 anormal ölçüm · 30.0 s
+… atak 2: konum 570 s · pencere 12:20 · 840 s bekleniyor
+✓ atak 2: 3000 anormal ölçüm · 30.0 s
+… atak 3: konum 595 s · pencere 12:30 · 595 s bekleniyor
+✓ atak 3: 3000 anormal ölçüm · 30.0 s

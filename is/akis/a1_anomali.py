@@ -6,8 +6,9 @@
             Uyarı süresi ≈ trigger aralığı + yığın süresi. Geç gelen ölçüm de işaretlenir (geç ama kaybolmaz).
   pencere : 10 dk'lık sabit pencerede sensör başına anomali sayısı + en büyük sapma; watermark ile kesinleşir (append).
             Satır ancak pencere bitip watermark geçince çıkar → kesin ama geç.
-  oran    : (K-09b/K-09c, VARSAYILAN) 10 dk pencerede sensörün sıçrama oranı > %1 VE en az 12 sıçrama → normal dışı.
-            update kipi, her yığında güncellenir.
+  oran    : (K-09b/c/e, VARSAYILAN) 1 dk KAYAN pencerede (10 s adım) sensörün sıçrama oranı > %1 VE en az 15 sıçrama → normal dışı.
+            update kipi, her yığında güncellenir. (K-09e, 28 Kas: 10 dk sabit pencere pencere sonunda 5 s'yi aşıyordu, başında oynaktı.)
+            Aynı sensör için ⚠ 10 dk'lık rapor penceresinde bir kez basılır (kayan pencereler üst üste biner).
 Kurallar: K-04 earliest · K-09a eşik (bölge × saat, medyan ± 5 × dss) · bölge mesajdan değil sensorler.csv'den alınır
 (mesajlarda bölge eksik olabiliyor, B1/B3) · sensor_id'siz kayıt atılır. Tekrar ayıklama B5'te (K-12) eklenecek.
 
@@ -27,12 +28,14 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--mod", default="oran", choices=["oran", "anlik", "pencere", "ikisi"],
                 help="oran = K-09b kararı; anlik/pencere/ikisi = B3 karşılaştırma deneyleri")
 ap.add_argument("--oran-esik", type=float, default=1.0, help="K-09b: pencerede sıçrama oranı (%%) eşiği")
-ap.add_argument("--min-sicrama", type=int, default=12, help="K-09c: pencerede en az bu kadar sıçrama (sağlam sensörlerde en çok 8 görüldü)")
+ap.add_argument("--min-sicrama", type=int, default=15, help="K-09c/e: pencerede en az bu kadar sıçrama (sağlam sensörlerde 60 s'de en çok 10 görüldü)")
 ap.add_argument("--ham-kayit", default=None, help="oran kipi: her yığında güncellenen bütün pencere satırları (analiz için) CSV")
+ap.add_argument("--uyari-kayit", default=None, help="oran kipi: her YENİ ⚠ uyarısı (t_bitti dahil) CSV — K-09d tespit süresi")
 ap.add_argument("--trigger", type=float, default=2.0, help="mikro-yığın aralığı, saniye (K-08)")
 ap.add_argument("--esik", default="s3a://islenmis/_stub/iot_esik.parquet", help="K-09a eşik tablosu (A'nınki gelince değişecek)")
 ap.add_argument("--k", type=float, default=5.0)
-ap.add_argument("--pencere", default="10 minutes")
+ap.add_argument("--pencere", default="1 minute", help="oran kipi pencere uzunluğu (K-09e); anlik/pencere deneyleri 10 minutes ile koşmuştu")
+ap.add_argument("--kayma", default="10 seconds", help="oran kipi pencere adımı (K-09e); boş verilirse sabit pencere")
 ap.add_argument("--watermark", default="2 minutes", help="GEÇİCİ: kesin değer B6'da (K-13)")
 ap.add_argument("--olcum", default=None, help="gecikme ölçümlerinin ekleneceği CSV (repo köküne göre)")
 ap.add_argument("--etiket", default="")
@@ -125,7 +128,7 @@ oran = (olay.join(F.broadcast(esik_genis), ["bolge", "saat"])
         .where(F.col("sicaklik").isNotNull() | F.col("nem").isNotNull() | F.col("titresim").isNotNull())
         .withColumn("anomali", asti("sicaklik") | asti("nem") | asti("titresim"))
         .withWatermark("olay_zamani", a.watermark)
-        .groupBy(F.window("olay_zamani", a.pencere), "sensor_id")
+        .groupBy(F.window("olay_zamani", a.pencere, a.kayma) if a.kayma else F.window("olay_zamani", a.pencere), "sensor_id")
         .agg(F.count("*").alias("olcum_sayisi"), F.sum(F.col("anomali").cast("int")).alias("anomali_sayisi"),
              F.max("kafka_zamani").alias("son_kafka"))
         .select(F.col("window.start").alias("pencere_bas"), F.col("window.end").alias("pencere_bit"),
@@ -152,9 +155,27 @@ def oran_yigin(df, yigin_id):
             for r in satirlar:
                 w.writerow([a.etiket, yigin_id, round(t_bitti, 3), r["pencere_bas"], r["anahtar"], r["olcum_sayisi"],
                             r["anomali_sayisi"], round(r["son_kafka"].timestamp(), 3)])
-    yeni_isaret = [r for r in satirlar if r["esik_asildi"] and (r["pencere_bas"], r["anahtar"]) not in isaretli_once]
+    def rapor_penceresi(r):          # K-09e: kayan pencereler üst üste biner → ⚠ 10 dk'lık rapor penceresinde sensör başına bir kez
+        t = r["pencere_bit"].timestamp() - 1
+        return int(t // 600) * 600
+    yeni = {}                        # aynı yığında üst üste binen pencereler → (rapor penceresi, sensör) başına TEK satır, en güncel pencere
+    for r in sorted(satirlar, key=lambda r: r["pencere_bas"], reverse=True):
+        anahtar = (rapor_penceresi(r), r["anahtar"])
+        if r["esik_asildi"] and anahtar not in isaretli_once and anahtar not in yeni:
+            yeni[anahtar] = r
+    yeni_isaret = list(yeni.values())
+    if a.uyari_kayit and yeni_isaret:
+        yol = os.path.join("/kit", a.uyari_kayit)
+        yeni = not os.path.exists(yol)
+        with open(yol, "a", newline="", encoding="utf-8") as f:
+            w = csv.writer(f)
+            if yeni:
+                w.writerow(["etiket", "yigin", "t_bitti", "pencere_bas", "anahtar", "olcum_sayisi", "anomali_sayisi", "son_kafka"])
+            for r in yeni_isaret:
+                w.writerow([a.etiket, yigin_id, round(t_bitti, 3), r["pencere_bas"], r["anahtar"], r["olcum_sayisi"],
+                            r["anomali_sayisi"], round(r["son_kafka"].timestamp(), 3)])
     for r in yeni_isaret:
-        isaretli_once.add((r["pencere_bas"], r["anahtar"]))
+        isaretli_once.add((rapor_penceresi(r), r["anahtar"]))
         print(f"⚠ yığın {yigin_id}: {r['anahtar']} normal dışı · pencere {r['pencere_bas']:%H:%M} · oran %{r['deger']} "
               f"({r['anomali_sayisi']}/{r['olcum_sayisi']}) · Kafka'dan {t_bitti - r['son_kafka'].timestamp():.2f} s sonra")
 

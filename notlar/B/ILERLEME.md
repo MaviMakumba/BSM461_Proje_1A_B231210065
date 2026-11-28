@@ -10,7 +10,7 @@
 | B0 | Hazırlık | `rol-b` dalı, compose güncel, not dosyaları, README taslağı | 25 Kas | ⏳ yalnız README notu (K-02 cevabı) |
 | B1 | Kafka keşfi | 20 olay incelemesi; geç + tekrar olay örneği (→ C) | 25 Kas | ✅ 24 Kas (K-04) |
 | B2 | Konu tasarımı | bölüm sayısı hesabı, anahtar, acks/idempotent ölçümü | 27 Kas | ✅ 24 Kas (K-05/06/07) |
-| B3 | A1 — anomali | konsolda çalışan sorgu (5 s uyarı) | 29 Kas | ⏳ kural + kod ✅ (K-08, K-09a–d); enjeksiyon deneyi ☐ |
+| B3 | A1 — anomali | konsolda çalışan sorgu (5 s uyarı) | 29 Kas | ✅ 28 Kas (K-08, K-09a–e; enjeksiyon 40/40, en çok 3,67 s, 0 yanlış alarm) |
 | B4 | A2 — susan sensör | konsolda çalışan sorgu | 30 Kas | ☐ |
 | B5 | Gerçek çıktı | Delta sink `akis_iot_a1/_a2` + checkpoint + tekrar ayıklama | **2 Ara** (C bekliyor) | ☐ |
 | B6 | 🔴 Watermark deneyi | kart oranı ↔ `--gec-orani 0.3`; kaçırılan olay sayısı | 4 Ara | ☐ |
@@ -20,6 +20,10 @@
 | B10 | Rapor | bölüm 8 (+3, 11 katkısı), YZ günlüğü, soru bankası | **8 Ara** | ☐ |
 
 ## ▶ Sonraki oturum buradan başlar (28 Kas sonu)
+- **28 Kas akşam:** B3 KAPANDI. K-09d ölçüldü (`enj1`: eski kural 13/40 > 5 s, 1 yanlış alarm) → K-09e: 1 dk kayan pencere, ≥15 (`enj2`: 40/40,
+  en çok 3,67 s, 0 yanlış alarm). Çoklu ⚠ hatası düzeltildi. A'nın PR #6'sı alındı (`iot_esik` birebir). `enj2` sırasında bellek baskısıyla arka plan
+  komutu durduruldu (deney bitmişti, veri tam); Spark tek işte ~3 GB tutuyor → B5'te uzun koşularda belleğe dikkat.
+- **Sıradaki:** B4 (A2 susan sensör, K-10): akış verisinden sensör başına gönderim aralığı ve susma süreleri ölçülecek. Sonra B5 (2 Ara).
 0. **28 Kas yapılanlar:** C'nin PR #3–4'ü rol-b'ye alındı. Veri farkı çözüldü → **K-15** (`uretici.py --son-gun 2026-11-23`, sha256 14/14 aynı).
    **K-16** (A1/A2'ye `bolge`). Eşik stub'ı tekrar ayıklama hatası düzeltildi (etki ölçüldü, anomali sayısı değişmedi). README "Kitten farklarımız".
    Kanıt `kanit/b5/c-veri-farki.txt`. ✅ Eren onayladı; rol-b → main PR ile alındı. **Ekip mesajı** (aşağıda "28 Kas ekip mesajı") Eren tarafından gönderilecek.
@@ -44,6 +48,14 @@
 - [x] T1/T2 kesinleşti (A) → K-03 · [ ] A1/A2 ekibe önerildi, onay bekleniyor
 
 ## Ekibe iletilecekler
+- **A, PR #6 (28 Kas, merge c96aeb2):** `iot_esik` (Delta) B'de bağımsız doğrulandı → 504/504, fark 0,0 (`esik_karsilastir.py`). `iot_t1` 2.352 satır,
+  `iot_t2` 39 satır. PR yorumunda istenenler: Z2 kanıtlarını K-15 verisiyle yenile, `z2-esit-kayit-boyut.txt` UTF-16 → UTF-8, Delta'yı `delta_scan` ile oku.
+  A'nın sorusu (T2 veri_kaybi tabanı ↔ A2) → cevaplandı, A kabul etti (kod değişmiyor): raporda T2–A2 kapsam/hız farkı tek cümle;
+  T2'de sağlıklı grupların ~%0,1–0,5 bandı "gürültü tabanı" olarak yazılacak. A2 eşiği B4'te (K-10) akış verisinden ölçülecek.
+  **B5'te:** A1 `--esik` artık `s3a://tablolar/iot_esik` (Delta) okuyacak; stub yalnız yedek.
+- **A'nın cevabı (28 Kas):** 23 Kas üretimi (6.030, C ile aynı). K-15'e geçip Z2'yi yeniden ölçecek; `iot_t1`, `iot_t2`, `iot_esik`
+  hedefi **30 Kas**; 1 Ara'ya kadar gelmezse B yazar (A kabul). K-09a'yı onayladı. Ona şema + dss formülü + `is/akis/esik_karsilastir.py` gönderildi.
+  ⚠ B5 notu: A1 şu an eşiği Parquet okuyor; A'nınki Delta → `--esik` okuma biçimi Delta'ya çevrilecek.
 - **28 Kas ekip mesajı (gönderilecek):**
   - Herkese K-15 (veri `--son-gun 2026-11-23` ile yeniden üretilecek; kontrol: üretici "6.050 tekrar" yazmalı).
   - C'ye istekler: `delta_scan`, `ORDER BY`, `bolge` geliyor/`model` sende, anomali adı, hata günlüğü, p99 sabit yazı.

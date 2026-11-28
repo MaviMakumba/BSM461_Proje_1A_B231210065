@@ -1,0 +1,358 @@
+11:52:39 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+11:52:42 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 2000 milliseconds, but spent 2918 milliseconds
+HAZIR — veri bekleniyor
+⚠ yığın 222: sensor-053 normal dışı · pencere 12:00 · oran %37.5 (30/80) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-050 normal dışı · pencere 12:00 · oran %30.303 (30/99) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-052 normal dışı · pencere 12:00 · oran %40.541 (30/74) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-051 normal dışı · pencere 12:00 · oran %36.905 (31/84) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-055 normal dışı · pencere 12:00 · oran %28.571 (30/105) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-056 normal dışı · pencere 12:00 · oran %31.579 (30/95) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-058 normal dışı · pencere 12:00 · oran %32.967 (30/91) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-054 normal dışı · pencere 12:00 · oran %30.097 (31/103) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-059 normal dışı · pencere 12:00 · oran %33.708 (30/89) · Kafka'dan 0.48 s sonra
+⚠ yığın 222: sensor-057 normal dışı · pencere 12:00 · oran %29.126 (30/103) · Kafka'dan 0.48 s sonra
+⚠ yığın 274: sensor-129 normal dışı · pencere 12:00 · oran %1.242 (12/966) · Kafka'dan 0.97 s sonra
+⚠ yığın 669: sensor-058 normal dışı · pencere 12:10 · oran %1.131 (33/2919) · Kafka'dan 0.39 s sonra
+⚠ yığın 669: sensor-056 normal dışı · pencere 12:10 · oran %1.222 (35/2863) · Kafka'dan 0.39 s sonra
+⚠ yığın 669: sensor-051 normal dışı · pencere 12:10 · oran %1.144 (33/2884) · Kafka'dan 0.39 s sonra
+⚠ yığın 669: sensor-052 normal dışı · pencere 12:10 · oran %1.262 (27/2139) · Kafka'dan 0.39 s sonra
+⚠ yığın 670: sensor-053 normal dışı · pencere 12:10 · oran %1.538 (45/2926) · Kafka'dan 0.40 s sonra
+⚠ yığın 670: sensor-055 normal dışı · pencere 12:10 · oran %1.586 (46/2900) · Kafka'dan 0.40 s sonra
+⚠ yığın 670: sensor-057 normal dışı · pencere 12:10 · oran %1.613 (47/2913) · Kafka'dan 0.50 s sonra
+⚠ yığın 670: sensor-054 normal dışı · pencere 12:10 · oran %1.599 (47/2940) · Kafka'dan 0.40 s sonra
+⚠ yığın 670: sensor-059 normal dışı · pencere 12:10 · oran %1.606 (47/2927) · Kafka'dan 0.40 s sonra
+⚠ yığın 670: sensor-050 normal dışı · pencere 12:10 · oran %1.626 (48/2952) · Kafka'dan 0.40 s sonra
+⚠ yığın 1104: sensor-052 normal dışı · pencere 12:20 · oran %1.031 (40/3881) · Kafka'dan 0.44 s sonra
+⚠ yığın 1105: sensor-057 normal dışı · pencere 12:20 · oran %1.049 (58/5531) · Kafka'dan 0.51 s sonra
+⚠ yığın 1105: sensor-054 normal dışı · pencere 12:20 · oran %1.105 (61/5522) · Kafka'dan 0.51 s sonra
+⚠ yığın 1105: sensor-053 normal dışı · pencere 12:20 · oran %1.047 (59/5634) · Kafka'dan 0.51 s sonra
+⚠ yığın 1105: sensor-050 normal dışı · pencere 12:20 · oran %1.076 (60/5575) · Kafka'dan 0.51 s sonra
+⚠ yığın 1105: sensor-051 normal dışı · pencere 12:20 · oran %1.106 (62/5608) · Kafka'dan 0.51 s sonra
+⚠ yığın 1105: sensor-059 normal dışı · pencere 12:20 · oran %1.067 (60/5625) · Kafka'dan 0.51 s sonra
+⚠ yığın 1106: sensor-055 normal dışı · pencere 12:20 · oran %1.261 (71/5629) · Kafka'dan 0.40 s sonra
+⚠ yığın 1106: sensor-058 normal dışı · pencere 12:20 · oran %1.35 (75/5554) · Kafka'dan 0.40 s sonra
+⚠ yığın 1106: sensor-056 normal dışı · pencere 12:20 · oran %1.246 (70/5616) · Kafka'dan 0.40 s sonra
+⚠ yığın 1418: sensor-051 normal dışı · pencere 12:30 · oran %1.111 (66/5940) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-059 normal dışı · pencere 12:30 · oran %1.092 (63/5768) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-054 normal dışı · pencere 12:30 · oran %1.118 (66/5901) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-056 normal dışı · pencere 12:30 · oran %1.158 (69/5956) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-057 normal dışı · pencere 12:30 · oran %1.192 (69/5789) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-052 normal dışı · pencere 12:30 · oran %1.42 (58/4084) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-050 normal dışı · pencere 12:30 · oran %1.037 (59/5692) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-053 normal dışı · pencere 12:30 · oran %1.118 (64/5725) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-055 normal dışı · pencere 12:30 · oran %1.15 (66/5738) · Kafka'dan 0.43 s sonra
+⚠ yığın 1418: sensor-058 normal dışı · pencere 12:30 · oran %1.193 (68/5702) · Kafka'dan 0.43 s sonra
+⚠ yığın 1419: sensor-051 normal dışı · pencere 12:40 · oran %50.0 (20/40) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-053 normal dışı · pencere 12:40 · oran %55.556 (20/36) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-052 normal dışı · pencere 12:40 · oran %68.966 (20/29) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-056 normal dışı · pencere 12:40 · oran %58.824 (20/34) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-059 normal dışı · pencere 12:40 · oran %52.632 (20/38) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-057 normal dışı · pencere 12:40 · oran %54.054 (20/37) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-054 normal dışı · pencere 12:40 · oran %51.282 (20/39) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-058 normal dışı · pencere 12:40 · oran %52.5 (21/40) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-055 normal dışı · pencere 12:40 · oran %48.78 (20/41) · Kafka'dan 0.46 s sonra
+⚠ yığın 1419: sensor-050 normal dışı · pencere 12:40 · oran %64.516 (20/31) · Kafka'dan 0.46 s sonra
+12:42:34 ERROR MicroBatchExecution: Query [id = 83700216-23a0-418f-8ddf-7ce2db76c489, runId = 8e168823-2607-4e03-a154-2cedc0555894] terminated with error
+java.util.concurrent.ExecutionException: java.lang.IllegalStateException: Cannot call methods on a stopped SparkContext.
+This stopped SparkContext was created at:
+
+org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+py4j.Gateway.invoke(Gateway.java:238)
+py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+java.base/java.lang.Thread.run(Thread.java:840)
+
+The currently active SparkContext was created at:
+
+org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+py4j.Gateway.invoke(Gateway.java:238)
+py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+java.base/java.lang.Thread.run(Thread.java:840)
+         
+	at java.util.concurrent.FutureTask.report(FutureTask.java:122) ~[?:?]
+	at java.util.concurrent.FutureTask.get(FutureTask.java:205) ~[?:?]
+	at org.apache.spark.sql.execution.exchange.BroadcastExchangeExec.doExecuteBroadcast(BroadcastExchangeExec.scala:212) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.doExecuteBroadcast(WholeStageCodegenExec.scala:517) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeBroadcast$1(SparkPlan.scala:208) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeBroadcast(SparkPlan.scala:204) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.prepareBroadcast(BroadcastHashJoinExec.scala:186) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.prepareRelation(BroadcastHashJoinExec.scala:200) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.codegenInner(HashJoin.scala:390) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.codegenInner$(HashJoin.scala:389) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.codegenInner(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doConsume(HashJoin.scala:356) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doConsume$(HashJoin.scala:354) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.doConsume(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.consume(WholeStageCodegenExec.scala:196) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.consume$(WholeStageCodegenExec.scala:151) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.consume(basicPhysicalOperators.scala:42) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.doConsume(basicPhysicalOperators.scala:89) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.consume(WholeStageCodegenExec.scala:196) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.consume$(WholeStageCodegenExec.scala:151) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.consume(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.doProduce(WholeStageCodegenExec.scala:485) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.doProduce$(WholeStageCodegenExec.scala:458) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.doProduce(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.produce(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.doProduce(basicPhysicalOperators.scala:55) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.produce(basicPhysicalOperators.scala:42) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doProduce(HashJoin.scala:351) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doProduce$(HashJoin.scala:350) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.doProduce(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.produce(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.doProduce(basicPhysicalOperators.scala:55) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.produce(basicPhysicalOperators.scala:42) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doProduce(HashJoin.scala:351) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.HashJoin.doProduce$(HashJoin.scala:350) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.doProduce(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.joins.BroadcastHashJoinExec.produce(BroadcastHashJoinExec.scala:40) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.doProduce(basicPhysicalOperators.scala:55) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.$anonfun$produce$1(WholeStageCodegenExec.scala:97) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.CodegenSupport.produce$(WholeStageCodegenExec.scala:92) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.produce(basicPhysicalOperators.scala:42) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doCodeGen(WholeStageCodegenExec.scala:660) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:723) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.EventTimeWatermarkExec.doExecute(EventTimeWatermarkExec.scala:100) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDD(WholeStageCodegenExec.scala:527) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs(WholeStageCodegenExec.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs$(WholeStageCodegenExec.scala:454) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDDs(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.inputRDDs(basicPhysicalOperators.scala:51) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs(AggregateCodegenSupport.scala:89) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs$(AggregateCodegenSupport.scala:88) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.inputRDDs(HashAggregateExec.scala:49) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:751) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.ShuffleExchangeExec.inputRDD$lzycompute(ShuffleExchangeExec.scala:141) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.ShuffleExchangeExec.inputRDD(ShuffleExchangeExec.scala:141) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.ShuffleExchangeExec.shuffleDependency$lzycompute(ShuffleExchangeExec.scala:175) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.ShuffleExchangeExec.shuffleDependency(ShuffleExchangeExec.scala:173) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.ShuffleExchangeExec.doExecute(ShuffleExchangeExec.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDD(WholeStageCodegenExec.scala:527) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs(WholeStageCodegenExec.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs$(WholeStageCodegenExec.scala:454) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDDs(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs(AggregateCodegenSupport.scala:89) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs$(AggregateCodegenSupport.scala:88) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.inputRDDs(HashAggregateExec.scala:49) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:751) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StateStoreRestoreExec.doExecute(statefulOperators.scala:421) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDD(WholeStageCodegenExec.scala:527) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs(WholeStageCodegenExec.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs$(WholeStageCodegenExec.scala:454) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDDs(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs(AggregateCodegenSupport.scala:89) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs$(AggregateCodegenSupport.scala:88) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.inputRDDs(HashAggregateExec.scala:49) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:751) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StateStoreSaveExec.doExecute(statefulOperators.scala:485) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDD(WholeStageCodegenExec.scala:527) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs(WholeStageCodegenExec.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs$(WholeStageCodegenExec.scala:454) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDDs(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs(AggregateCodegenSupport.scala:89) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.AggregateCodegenSupport.inputRDDs$(AggregateCodegenSupport.scala:88) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.inputRDDs(HashAggregateExec.scala:49) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.ProjectExec.inputRDDs(basicPhysicalOperators.scala:51) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:751) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.QueryExecution.toRdd$lzycompute(QueryExecution.scala:207) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.QueryExecution.toRdd(QueryExecution.scala:206) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.sources.ForeachBatchSink.addBatch(ForeachBatchSink.scala:30) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.$anonfun$runBatch$17(MicroBatchExecution.scala:732) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:125) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:201) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$1(SQLExecution.scala:108) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:66) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.$anonfun$runBatch$16(MicroBatchExecution.scala:729) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.ProgressReporter.reportTimeTaken(ProgressReporter.scala:427) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.ProgressReporter.reportTimeTaken$(ProgressReporter.scala:425) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution.reportTimeTaken(StreamExecution.scala:67) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.runBatch(MicroBatchExecution.scala:729) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.$anonfun$runActivatedStream$2(MicroBatchExecution.scala:286) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23) ~[scala-library-2.12.18.jar:?]
+	at org.apache.spark.sql.execution.streaming.ProgressReporter.reportTimeTaken(ProgressReporter.scala:427) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.ProgressReporter.reportTimeTaken$(ProgressReporter.scala:425) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution.reportTimeTaken(StreamExecution.scala:67) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.$anonfun$runActivatedStream$1(MicroBatchExecution.scala:249) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.ProcessingTimeExecutor.execute(TriggerExecutor.scala:67) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.MicroBatchExecution.runActivatedStream(MicroBatchExecution.scala:239) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution.$anonfun$runStream$1(StreamExecution.scala:311) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23) ~[scala-library-2.12.18.jar:?]
+	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution.org$apache$spark$sql$execution$streaming$StreamExecution$$runStream(StreamExecution.scala:289) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution$$anon$1.$anonfun$run$1(StreamExecution.scala:211) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23) [scala-library-2.12.18.jar:?]
+	at org.apache.spark.JobArtifactSet$.withActiveJobArtifactState(JobArtifactSet.scala:94) [spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.streaming.StreamExecution$$anon$1.run(StreamExecution.scala:211) [spark-sql_2.12-3.5.3.jar:3.5.3]
+Caused by: java.lang.IllegalStateException: Cannot call methods on a stopped SparkContext.
+This stopped SparkContext was created at:
+
+org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+py4j.Gateway.invoke(Gateway.java:238)
+py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+java.base/java.lang.Thread.run(Thread.java:840)
+
+The currently active SparkContext was created at:
+
+org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+py4j.Gateway.invoke(Gateway.java:238)
+py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+java.base/java.lang.Thread.run(Thread.java:840)
+         
+	at org.apache.spark.SparkContext.assertNotStopped(SparkContext.scala:122) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.SparkContext.broadcastInternal(SparkContext.scala:1654) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.SparkContext.broadcast(SparkContext.scala:1639) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.datasources.csv.CSVFileFormat.buildReader(CSVFileFormat.scala:102) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.datasources.FileFormat.buildReaderWithPartitionValues(FileFormat.scala:138) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.datasources.FileFormat.buildReaderWithPartitionValues$(FileFormat.scala:129) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.datasources.TextBasedFileFormat.buildReaderWithPartitionValues(FileFormat.scala:346) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.FileSourceScanExec.inputRDD$lzycompute(DataSourceScanExec.scala:548) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.FileSourceScanExec.inputRDD(DataSourceScanExec.scala:537) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.FileSourceScanExec.doExecute(DataSourceScanExec.scala:575) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDD(WholeStageCodegenExec.scala:527) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs(WholeStageCodegenExec.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputRDDCodegen.inputRDDs$(WholeStageCodegenExec.scala:454) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.InputAdapter.inputRDDs(WholeStageCodegenExec.scala:498) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.FilterExec.inputRDDs(basicPhysicalOperators.scala:242) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.WholeStageCodegenExec.doExecute(WholeStageCodegenExec.scala:751) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.getByteArrayRdd(SparkPlan.scala:364) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SparkPlan.executeCollectIterator(SparkPlan.scala:455) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.exchange.BroadcastExchangeExec.$anonfun$relationFuture$1(BroadcastExchangeExec.scala:140) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withThreadLocalCaptured$2(SQLExecution.scala:224) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.JobArtifactSet$.withActiveJobArtifactState(JobArtifactSet.scala:94) ~[spark-core_2.12-3.5.3.jar:3.5.3]
+	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withThreadLocalCaptured$1(SQLExecution.scala:219) ~[spark-sql_2.12-3.5.3.jar:3.5.3]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:840) ~[?:?]

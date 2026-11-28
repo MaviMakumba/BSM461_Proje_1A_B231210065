@@ -1,0 +1,13 @@
+# K-09e çevrimdışı karşılaştırma · etiket enj1 · aynı Kafka verisi, 4 atak × 10 sensör · yanlış alarm birimi: (sensör, 10 dk pencere), toplam 1199 sensör-pencere
+
+kural | tespit 40/40 | medyan s | en çok s | konum 5/300/570/595 en çok s | yanlış alarm (sensör-pencere) | yanlış alarm veren sensörler
+R0 10 dk sabit, >%1 ve ≥12 | 40/40 | 2.29 | 4.73 | 0.47/2.34/4.54/4.73 | 1 | ['sensor-129']
+R1 2 dk sabit, >%1 ve ≥12 | 40/40 | 0.935 | 1.14 | 0.47/1.14/1.14/1.13 | 2 | ['sensor-066', 'sensor-129']
+R2 10 dk kayan (1 dk adım), >%1 ve ≥12 | 40/40 | 0.83 | 1.14 | 0.37/0.94/1.14/1.03 | 4 | ['sensor-021', 'sensor-066', 'sensor-129', 'sensor-200']
+R3 son 60 s'de ≥12 sıçrama | 40/40 | 0.94 | 1.14 | 0.47/1.14/1.14/1.13 | 0 | []
+R4 1 dk kayan (10 s adım), ≥12 | 40/40 | 1.03 | 1.14 | 0.47/1.14/1.14/1.13 | 0 | []
+# K-09e çevrimdışı karşılaştırma · etiket enj1 · aynı Kafka verisi, 4 atak × 10 sensör · yanlış alarm birimi: (sensör, 10 dk pencere), toplam 1199 sensör-pencere
+
+kural | tespit 40/40 | medyan s | en çok s | konum 5/300/570/595 en çok s | yanlış alarm (sensör-pencere) | yanlış alarm veren sensörler
+R4b 1 dk kayan (10 s adım), >%1 ve ≥15 | 40/40 | 1.33 | 1.44 | 0.77/1.44/1.44/1.43 | 0 | []
+R4c 1 dk kayan (10 s adım), >%1 ve ≥20 | 40/40 | 1.83 | 1.94 | 1.27/1.94/1.94/1.93 | 0 | []

@@ -248,10 +248,70 @@ basıyorum ve uyarının kaç saniyede çıktığını ölçüyorum. Benzetme: Y
 dedektörün kaç saniyede öttüğünü ölçüyorsun.
 
 **Kendi cümlem:** "Arıza atakları günde bir kez rastgele bir saatte geldiği için akışta beklemek pratik değil; toplu veride ölçtüğüm atak
-davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek tespit süresini doğrudan ölçeceğim." [deney bitince "ölçtüm" yapılıp sonuç eklenecek]
+davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek tespit süresini doğrudan ölçtüm."
+
+**Nasıl ayarladım (28 Kas, deney `enj1`):**
+- Atağın şekli toplu veriden: atak saatinde ölçümlerin medyan %50,5'i sıçrama; sıçramalarda sıcaklık medyan +27,2 °C, titreşim +2,57.
+  Bu 3.102 gerçek sapma satırından rastgele seçip o anki bölge×saat medyanına ekliyorum (`kanit/b3/atak-ozet.txt`).
+- Hız: normal üretici sensör başına ~9,6 ölçüm/s (ölçtüm) → atakta sensör başına 10 sıçrama/s ekliyorum → ölçümlerin ~yarısı sıçrama.
+  Kafka'dan geri okuyup kontrol ettim: atak sırasında pay **%51,5–53,9** (hedef %50,5; toplu veride sensörlerin yarısı %45–55 arası).
+- Zamanlama: 4 atak, her biri 30 s, ayrı pencerelerde; pencerenin 5. / 300. / 570. / 595. saniyesinde başlıyor.
+  Neden? Kova benzetmesi: oran "kovadaki suya damlatılan mürekkep". Kova boşken (pencere başı) birkaç damla rengi değiştirir;
+  doluyken (pencere sonu) çok damla gerekir → tespit pencere sonunda yavaşlar mı, onu ölçmek istedim.
+
+**Ölçülen (canlı, 40 tespit = 4 atak × 10 sensör):**
+| Atak pencerenin neresinde | Yakalanan | Tespit süresi (medyan / en çok) | 5 s içinde |
+|---|---|---|---|
+| Başı (5. s) | 10/10 | 2,76 / 2,76 s | 10/10 |
+| Ortası (300. s) | 10/10 | 4,44 / 4,44 s | 10/10 |
+| Sonu (570. s) | 10/10 | 4,45 / **6,34 s** | 7/10 |
+| Sınır (595. s) | 10/10 | 5,36 / **5,36 s** | 0/10 |
+| **Toplam** | **40/40** | **4,44 / 6,34 s** | **27/40** |
+
+- **Arıza her seferinde yakalandı**, ama pencere sonunda 5 s sınırı aşıldı → tahmin ettiğim "oran seyrelmesi" gerçek.
+- Süreler 2,4 / 4,4 / 6,3 s'de kümeleniyor: Spark 2 s'de bir bakıyor (K-08); uyarı ya 1., ya 2., ya 3. yığında çıkıyor.
+- **1 yanlış alarm:** sağlam sensor-129, pencerenin ilk ~90 saniyesinde tesadüfen 12 sıçrama yaptı → 12/966 = %1,24 → alarm.
+  Pencerenin tamamında oranı yalnız %0,45. Yani pencere BAŞINDA payda küçük olduğu için oran oynak → yanlış alarm.
+  Aynı kusurun iki yüzü: pencere sonunda yavaş, pencere başında oynak. → **K-09e** (bkz. 6.6).
 
 - *S: Veriyi uydurmuş olmuyor musun?* → C: Atağın oranı ve büyüklüğü gerçek veriden ölçüldü; yalnızca ne zaman başlayacağını ben seçtim.
   Raporda da "enjeksiyon" diye açıkça yazıyorum. Aynı aracı canlı gösterimde kullanacağım.
+- *S: Yanlış alarmı nasıl açıklıyorsun?* → Sensörün o 10 dakikadaki mesajlarını Kafka'dan geri okudum: 26 gerçek sıçrama, 12'si ilk
+  90 saniyede kümelenmiş. Kural pencere başında oynak olduğu için alarm verdi; bu bulgu kuralı değiştirmemize yol açtı (K-09e).
+
+### 6.6 Kuralı neden değiştirdim? → 10 dk sabit pencere yerine 1 dk kayan pencere (K-09e)
+**Basit anlatım:** "Son 10 dakikanın oranı" yerine "son 1 dakikada kaç sıçrama" sayıyorum, ve bu 1 dakikayı 10 saniyede bir kaydırıyorum.
+Kova hep aynı büyüklükte (1 dk ≈ 600 ölçüm) → ne başta oynak ne sonda yavaş.
+
+**Nasıl karşılaştırdım (çevrimdışı tekrar oynatma):** Deneyin 5,7 milyon mesajı Kafka'da duruyordu. Aynı mesajları aynı sırayla 5 farklı kurala
+verdim; her kural birebir aynı veride yarıştı. Doğrulama: mevcut kural (R0) çevrimdışında da tam olarak aynı tek yanlış alarmı (sensor-129)
+verdi → yöntem güvenilir. Canlı süre ≈ çevrimdışı süre + ~2 s (Spark'ın 2 s'lik yığını; R0'da ikisini karşılaştırarak ölçtüm).
+
+**Çevrimdışı sonuç (aynı veri, 7 kural):**
+| Kural | En uzun tespit (canlı tahmini) | Yanlış alarm |
+|---|---|---|
+| 10 dk sabit, ≥12 (eski) | 6,34 s (ölçüldü) | 1 |
+| 2 dk sabit, ≥12 | ~3,4 s | 2 |
+| 10 dk kayan (1 dk adım), ≥12 | ~3,4 s | 4 |
+| 1 dk kayan (10 s adım), ≥12 | ~3,4 s | 0 |
+| **1 dk kayan (10 s adım), ≥15 — SEÇİLEN** | ~3,7 s | 0 |
+| 1 dk kayan (10 s adım), ≥20 | ~4,2 s | 0 |
+
+**Neden 15:** Sağlam 190 sensörün herhangi bir dakikadaki en çok sıçraması **10** (çoğu 5–7). Atakta dakikada ~600. 12 sağlamın yalnız 2
+üstünde; 15 → 5 üstünde ve sadece 0,3 s yavaş.
+
+**Canlıda doğruladım (`enj2`, aynı 4 konum × 10 sensör):** 40/40 yakalandı · en uzun **3,67 s** (tahmin ~3,7 s) · medyan 2,81 s ·
+**40/40 5 s içinde · 0 yanlış alarm.** Eski kuralla pencere sonunda 6,34 s idi → şimdi 2,56 s. Konum artık süreyi belirlemiyor.
+
+**Yolda bulduğum hata:** Üst üste binen 6 kayan pencere aynı anda eşiği geçince aynı sensör için 6 uyarı basılıyordu. Düzelttim: 10 dk'lık
+rapor penceresinde sensör başına tek uyarı. (Tespit süresi etkilenmedi.)
+
+**Kendi cümlem:** "10 dakikalık sabit pencerede oranın paydası sürekli büyüdüğü için pencere sonunda geç, başında oynak kalıyordu. 1 dakikalık
+kayan pencereye geçtim ve eşiği sağlam sensörlerin ölçülen en yüksek değerinin 5 üstüne koydum: 40 atağın 40'ı en çok 3,7 saniyede,
+yanlış alarmsız yakalandı."
+
+- *S: Soru "son 10 dakika" diyor?* → Tespit 1 dakikalık kayan sayımla; rapor tablosu yine 10 dakikalık pencere başına bir satır (B5).
+- *S: Bedeli?* → Her ölçüm 6 pencereye girer, durum 6 kat; ama yalnız sayaç tutuluyor (200 sensör × ~18 pencere), küçük.
 
 ## 7. A2 — susan sensör (B4)
 [doldurulacak]

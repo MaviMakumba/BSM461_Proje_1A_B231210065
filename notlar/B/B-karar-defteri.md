@@ -158,7 +158,9 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   - *"acks=all mesaj kaybını tamamen önler mi?"* → Hayır. Üreticinin yerel kuyruğundaki, henüz gönderilmemiş mesajları korumaz
     (Queue full bulgusu); uygulama hatayı yakalayıp beklemeli/yeniden denemeli.
 
-### K-09a · "Normal dışı" tanımı = **bölge × günün saati tabanı, medyan ± 5 × dirençli ss** — `KARAR (B)`, A'nın onayı bekleniyor (B3, 24 Kas)
+### K-09a · "Normal dışı" tanımı = **bölge × günün saati tabanı, medyan ± 5 × dirençli ss** — `KARAR (B + A)`, A onayladı 28 Kas: T2'de birebir bu kural (B3, 24 Kas)
+- **Teslim (28 Kas, A, PR #6):** `s3a://tablolar/iot_esik` (Delta, Spark kesin `percentile`) B'nin DuckDB referansıyla birebir aynı: 504/504 satır,
+  medyan ve dss farkı 0,0 (`is/akis/esik_karsilastir.py`, B'nin makinesinde bağımsız çalıştırıldı). İki ayrı motor, aynı sonuç.
 - **Kural:** Bir ölçüm (sıcaklık, nem ya da titreşim), kendi bölgesinin o saatteki medyanından **5 × dirençli ss**'den fazla saparsa
   anomalidir. Dirençli ss = 1,4826 × MAD. Eşik tablosu: 7 bölge × 24 saat × 3 ölçü = 504 satır, toplu veriden **bir kez** hesaplanır.
   Akış (A1) ve toplu (T2) aynı tabloyu kullanır. Öneri: A yazar → `s3a://tablolar/iot_esik`, B okur. Saat = `olay_zamani`'nın saati (UTC); iki tarafta aynı.
@@ -231,7 +233,7 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
 - **Hoca sorarsa:** *"12 nereden?"* → sağlamlarda en çok 8 gördük, 10 sıfır verdi, 2 adım pay bıraktık. *"Az ölçümlü sensör kaçar mı?"* →
   Hayır, artık ölçüm sayısına değil sıçrama sayısına bakıyoruz; 12 sıçramayı dolduran her sensör değerlendirilir.
 
-### K-09d · A1'in doğrulanması = **arıza enjeksiyonu** — `KARAR` (B3, 25 Kas), deney bir sonraki oturumda
+### K-09d · A1'in doğrulanması = **arıza enjeksiyonu** — `ÖLÇÜLDÜ` (B3, 25 Kas karar · 28 Kas deney `enj1`)
 - **Bağlam:** Toplu veride arıza her gün bir kez, 10 TX-200 sensöründe aynı anda, ~1–2 saatlik atak (tepe saatte oran %50,28). 20 dk'lık akış
   deneyine denk gelmedi → kuralın gerçek arızayı yakaladığını akışta henüz görmedik.
 - **Alternatifler:** (a) üreticiyi saatlerce çalıştırıp atağı beklemek · (b) toplu veriyi Kafka'ya yeniden oynatmak (replay) · **(c) enjeksiyon:**
@@ -239,13 +241,78 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   eklenerek) Kafka'ya basmak.
 - **Seçim (Eren). Gerekçe cümlesi asistan taslağıdır, Eren kabul etti:** *"Arıza atakları günde bir kez rastgele bir saatte geldiği için akışta
   beklemek pratik değil; toplu veride ölçtüğüm atak davranışını (oran %50, gerçek sapma büyüklükleri) akışa enjekte ederek tespit süresini
-  doğrudan ölçeceğim."* (deney bitince "ölçtüm" olarak güncellenecek)
+  doğrudan ölçtüm."*
 - **Ölçülecekler:** tespit süresi (atak başı → ⚠ satırı) medyan/maks; atağın pencere içindeki başlangıç anına göre (başta / ortada / sonda);
   aynı sürede yanlış alarm sayısı. Kanıt `kanit/b3/enjeksiyon-*.txt`, satırlar `B.csv`.
 - **Bedeli:** Sentetik atak gerçek atağın kopyası değil, ölçülen özellikleri taşıyan bir modeli. Raporda "enjeksiyon" diye açıkça yazılacak.
 - **Artısı:** Aynı araç canlı gösterimde (B9) ve Z11 kırılma deneyinde (B8) kullanılacak: "şimdi bir arıza başlatıyorum, 3 saniyede uyarı".
 - **Hoca sorarsa:** *"Kendi verinizi kendiniz mi uydurdunuz?"* → Hayır: atağın oranı ve sapma büyüklükleri toplu veriden ölçüldü; yalnızca
   zamanlamasını biz seçtik, çünkü gerçek atak günde bir kez geliyor.
+- **Deney (28 Kas, `enj1`)** · araçlar `is/olcum/b3_atak_sapma.py`, `b3_ariza_enjeksiyonu.py`, `b3_enjeksiyon_deneyi.sh`, `b3_enjeksiyon_analiz.py`, `b3_enjeksiyon_pay.py`:
+  - Atak şekli (toplu veri): atak saatinde sıçrama payı medyan **%50,5** (sensör-saat çeyrekleri 45,4–54,5); sıçramada sıcaklık +27,2 °C, titreşim +2,57.
+  - Enjeksiyon: sensor-050…059, sensör başına 10 sıçrama/s (normal üretici ~9,6/s ölçüldü), 30 s, 3.102 gerçek sapmadan örnekleme.
+    Kafka'dan geri okunan pay **%51,5–53,9** → enjeksiyon hedefi tutturdu.
+  - Zamanlama: 4 atak ayrı pencerelerde, pencerenin 5./300./570./595. saniyesinde. Doğal arıza saati (o gün TR 17:00) dışında.
+  - **Sonuç (canlı):** 40/40 yakalandı · medyan 4,44 s · en çok **6,34 s** · 5 s içinde **27/40**. Konuma göre en çok: 2,76 / 4,44 / 6,34 / 5,36 s.
+    Süreler yığın sınırlarında kümeleniyor (2,4 / 4,4 / 6,3 s, K-08). **Yanlış alarm 1** (sağlam sensor-129, pencere başında 12/966 = %1,24;
+    pencerenin tamamında %0,45; Kafka'dan geri okununca 12 gerçek sıçramanın ilk 90 s'de kümelendiği görüldü).
+  - **Yorum:** Kural arızayı her seferinde yakalıyor ama sabit pencerede oranın paydası değişken: pencere sonunda yavaş (kart 5 s'yi aşıyor),
+    pencere başında oynak (yanlış alarm). → **K-09e**.
+  - **Bedeli (enjeksiyonun):** Atak sırasında o 10 sensörün mesaj hızı ikiye çıkıyor (normal mesajları durduramıyoruz). Oran ve sapma gerçek,
+    hız değil. Raporda "enjeksiyon" diye açık yazılır.
+
+### K-09e · A1 pencere biçimi = **1 dk kayan pencere (10 s adım), oran > %1 VE ≥ 15 sıçrama** — `ÖLÇÜLDÜ` (B3, 28 Kas · canlı deney `enj2`)
+- **Bağlam:** K-09d'de 13/40 tespit 5 s'yi aştı (en çok 6,34 s) ve pencere başında 1 yanlış alarm çıktı. İkisinin kökü aynı: 10 dk sabit
+  pencerede oranın paydası 0'dan ~5.800'e büyüyor.
+- **Yöntem: çevrimdışı tekrar oynatma.** `enj1`'in 5.713.756 mesajı aynı sırayla 7 kurala verildi (`is/olcum/b3_k09e_karsilastir.py`).
+  Uyarı = kuralın (sensör, pencere) için ilk doğru olduğu an. Doğrulama: R0 (mevcut) çevrimdışında da aynı tek yanlış alarmı verdi.
+  Canlı süre ≈ çevrimdışı + ~1,6–2,3 s (R0'ın canlı ve çevrimdışı süreleri karşılaştırılarak ölçüldü: 2 s yığın + işleme).
+- **Ölçüm (`kanit/b3/k09e-karsilastirma.txt`, 1.199 sensör-pencere):**
+
+  | Kural | Tespit | Çevrimdışı en çok | Canlı tahmini en çok | Yanlış alarm |
+  |---|---|---|---|---|
+  | R0 mevcut: 10 dk sabit, >%1 ve ≥12 | 40/40 | 4,73 s | **6,34 s (ölçüldü)** | 1 |
+  | R1 2 dk sabit, >%1 ve ≥12 | 40/40 | 1,14 s | ~3,4 s | 2 |
+  | R2 10 dk kayan (1 dk adım), >%1 ve ≥12 | 40/40 | 1,14 s | ~3,4 s | 4 |
+  | R3 son 60 s'de ≥12 (tam kayan, Spark akışında doğrudan yok) | 40/40 | 1,14 s | ~3,4 s | 0 |
+  | R4 1 dk kayan (10 s adım), ≥12 | 40/40 | 1,14 s | ~3,4 s | 0 |
+  | R4b 1 dk kayan (10 s adım), >%1 ve ≥15 | 40/40 | 1,44 s | ~3,7 s | 0 |
+  | R4c 1 dk kayan (10 s adım), >%1 ve ≥20 | 40/40 | 1,94 s | ~4,2 s | 0 |
+
+- **Marj (`kanit/b3/k09e-marj.txt`):** 190 sağlam sensörün herhangi bir 60 s'de en çok sıçrama sayısı **10** (sensor-129), çoğu 5–7.
+  Atakta dakikada ~600 sıçrama. → 12 eşiği sağlamın 2 üstünde; 15 → 5 üstünde; 20 → 10 üstünde.
+- **Bedeller:** Kayan pencerede her olay W/adım pencereye girer (R4: 6 kat durum satırı, yalnız sayaç → küçük). R2 10 kat ve en çok yanlış alarm.
+  1 dk pencere "son 10 dakikada normal dışı" sorusunu değiştirmez: tespit 1 dk'lık kayan sayımla, rapor satırı yine 10 dk pencere başına
+  (`akis_iot_a1`: o 10 dk'da en az bir kez tetiklendiyse `esik_asildi`) → B5'te foreachBatch MERGE ile.
+  "Canlı tahmini" sütunu ölçüm değil; seçilen kural canlıda yeniden enjeksiyonla ölçülecek (`enj2`).
+- **Seçim (Eren): R4b. Gerekçe cümlesi asistan taslağıdır, Eren'in onayı bekleniyor:** *"Enjeksiyon deneyinde 10 dakikalık sabit pencere
+  pencere sonunda 5 saniyeyi aştı ve pencere başında yanlış alarm verdi; ikisinin kökü paydanın sürekli büyümesi. Aynı veride yedi kuralı
+  karşılaştırdım; 1 dakikalık kayan pencere her ikisini de çözdü. Eşiği 15 seçtim çünkü sağlam sensörlerin bir dakikadaki en yüksek
+  sıçrama sayısı 10 ölçüldü; 15, bunun 5 üstünde ve tespite yalnızca 0,3 saniye ekliyor. Canlı deneyde 40 atağın 40'ı en çok 3,67
+  saniyede, sıfır yanlış alarmla yakalandı."*
+- **Canlı doğrulama (`enj2`, aynı 4 konum × 10 sensör, `kanit/b3/enjeksiyon-sonuc-enj2.txt`):**
+
+  | Konum | R0 (`enj1`) en çok | **R4b (`enj2`) en çok** |
+  |---|---|---|
+  | Başı (5. s) | 2,76 s | **3,00 s** |
+  | Ortası (300. s) | 4,44 s | **2,62 s** |
+  | Sonu (570. s) | 6,34 s | **2,56 s** |
+  | Sınır (595. s) | 5,36 s | **3,67 s** |
+  | Toplam | 40/40 · medyan 4,44 · 27/40 ≤ 5 s · 1 yanlış alarm | **40/40 · medyan 2,81 · 40/40 ≤ 5 s · 0 yanlış alarm** |
+
+  Çevrimdışı tahmin (en çok ~3,7 s) canlıda tuttu (3,67 s). Konum artık süreyi belirlemiyor; süreler yalnızca hangi 2 s'lik yığına düştüğüne göre değişiyor.
+- **Bulunan hata (enj2):** üst üste binen 6 kayan pencere aynı yığında gelince sensör başına 6 ⚠ basılıyordu (230 satır). Düzeltildi: yığın içinde
+  (10 dk rapor penceresi, sensör) başına tek satır. Kayıtlı uyarılar düzeltilmiş süzgeçten geçirildi → 50 satır (40 ilk uyarı + son atak 16:40
+  rapor penceresine taştığı için 10 doğru ikinci uyarı). Tespit süreleri etkilenmedi (ilk uyarı anı aynı).
+- **Bedeli:** Her olay 6 kayan pencereye girer → durum 6 kat (yalnız sayaç; 200 sensör × ~18 açık pencere). "Son 10 dakika" sorusu raporlamada
+  korunur: `akis_iot_a1` satırı 10 dk rapor penceresi başına (B5). Eşik 15'in güvenlik payı yalnızca bir ~50 dk'lık deneyde ölçüldü (sağlam en çok 10).
+- **Hoca sorarsa:**
+  - *"Soru 'son 10 dakika' diyor, neden 1 dakika?"* → Tespit 1 dakikalık kayan sayımla, rapor 10 dakikalık pencereyle. 10 dk'lık oranın paydası
+    pencere sonunda 5.800'e çıkıyor ve atağı 6,3 s geç yakalıyordu; ölçtük.
+  - *"15'i nereden buldunuz?"* → Sağlam 190 sensörün herhangi bir dakikadaki en çok sıçraması 10; atakta dakikada ~600. 15 aradaki boşluğun
+    alt ucuna yakın: hızlı ama sağlamdan 5 uzak.
+  - *"Kuralları nasıl karşılaştırdınız?"* → Deneyin 5,7 milyon mesajını aynı sırayla her kurala verdik (çevrimdışı tekrar oynatma); yöntemi,
+    mevcut kuralın canlı sonucunu (aynı yanlış alarm dahil) yeniden üreterek doğruladık; seçileni canlıda tekrar ölçtük.
 
 ### K-15 · Ortak toplu veri = **`--son-gun 2026-11-23` ile sabitlenmiş üretim** (kite 1 seçenek eklendi) — `ÖLÇÜLDÜ` (B5 hazırlık, 28 Kas)
 - **Belirti:** C'nin Z10 sayıları bizimkiyle tutmadı: tekrar C'de 6.030, bizde 6.050; boş `sensor_id` C'de 1.193, bizde 1.215; ham boyut C'de 430.607.335,
@@ -262,7 +329,11 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   için üreticiye son günü sabitleyen bir seçenek ekledim. 24 Kas'ta ürettiğim veriyi bu seçenekle yeniden ürettim ve 14 günün 14'ünde sha256
   birebir aynı çıktı. Böylece ekipteki herkes ve hoca tek komutla aynı veriyi elde ediyor."*
 - **Neden 23 Kas (24 Kas üretimi):** Verisi en çok karara bağlı üye B (K-09a eşik tablosu, arıza saatleri, sensör oranları). Bu tarihle B'nin
-  ölçümleri geçerli kalıyor. C her durumda yeniden çalıştırmak zorundaydı (verisi zaten farklı). A'nın üretim günü soruluyor; aynıysa A'ya iş yok.
+  ölçümleri geçerli kalıyor.
+- **Yeni bilgi (28 Kas, A'nın cevabı) ve yeniden değerlendirme:** A da 23 Kas'ta üretmiş (6.030 tekrar) → A ve C aynı veride (son gün 22 Kas),
+  farklı olan B. Karar yine de korundu, çünkü toplam iş daha az: 23 Kas'ta kalınca A yalnız Z2 ölçümünü (T1, T2, `iot_esik` henüz
+  üretilmemişti), C üç hazır betiği (Z10, Z3, Z6) yeniden çalıştırıyor. 22 Kas'a geçilseydi B'nin 6 analiz betiği, eşik tablosu, enjeksiyon
+  deneyi ve defterdeki B3 sayılarının hepsi yeniden üretilecekti. A kabul etti, veriyi yeni komutla üretip "6.050 tekrar" ile doğrulayacak.
 - **Doğrulama (ölçüldü, 28 Kas):** Yeniden üretim öncesi veri `s3://islenmis/_yedek/ham_iot_24kas/` altına yedeklendi. Gün başına sıralı satırların
   sha256'sı: **14/14 gün birebir aynı**, üretici yine "6.050 tekrar" yazdı. (Dosya adları `parca-<uuid>` rastgele, içerik aynı.)
 - **Bedeli:** Kit dosyası değişti → hoca kiti güncellerse bu 4 satır yeniden uygulanmalı (README "Kitten farklarımız" tablosunda). C'nin Z10/Z3/Z6
@@ -271,6 +342,8 @@ Kitteki `is/akis_iskelet.py` yorumu "%5, 1–10 dk" der — bu genel bir örnek;
   - *"Kitin üreticisini neden değiştirdiniz?"* → Varsayılanı değiştirmedik, yalnızca tarih sabitleme seçeneği ekledik. Ekipte iki üye farklı günlerde
     üretince sayılar tutmamıştı. Eski veriyle birebir aynı olduğunu sha256 ile gösterdik.
   - *"Raporunuzdaki sayıları ben de üretebilir miyim?"* → Evet: README'deki tek komutla, hangi gün çalıştırırsanız çalıştırın.
+  - *"İki kişi aynı veride, siz farklıydınız; neden sizinkini seçtiniz?"* → Toplam yeniden çalıştırma işi en az bu seçenekte: A ve C'nin
+    işleri tek komutluk betikler, bizim ise veriye bağlı ölçüm zincirimiz uzundu. Seçimi bu karşılaştırmayla yaptık.
 
 ### K-16 · Akış çıktılarına (`akis_iot_a1`, `akis_iot_a2`) **`bolge` sütunu** eklenir; `model` eklenmez — `KARAR` (B5 hazırlık, 28 Kas)
 - **Bağlam:** C'nin panosu uyarı tablolarında bölge ve model gösteriyor, bölgeye göre süzüyor. Sözleşmedeki (ORTAK §6.3) A1/A2 satırında yalnızca
@@ -470,6 +543,7 @@ Bunun üstüne ~1,1 s sistem gecikmesi gelir. N=1000 kuralında ise her yeni pen
 11. Kafka sıra garantisi olay zamanı sırası mı? → B1 bulgu 6
 12. Neden 2 s trigger, kart 5 s diyor? → K-08
 13. Tek sıçramaya neden uyarı yok; %1 ve 12 nereden? → K-09b, K-09c
+13b. Soru 'son 10 dakika' diyor, neden 1 dk kayan pencere ve 15? → K-09e
 14. Arızayı akışta gerçekten yakaladınız mı, nasıl gösterdiniz? → K-09d (enjeksiyon)
 15. Raporunuzdaki sayıları ben üretebilir miyim; ekipte sayılar neden tutmuyordu? → K-15
 16. Akış çıktısında neden model yok? → K-16

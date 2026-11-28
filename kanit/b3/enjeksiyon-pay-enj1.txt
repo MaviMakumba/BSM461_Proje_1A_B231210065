@@ -1,0 +1,10 @@
+## Normal üretici: 5,713,756 ölçüm, 2989 s → sensör başına ortalama 9.56 ölçüm/s (200 sensör; enjeksiyon dahil, fark ihmal edilebilir)
+
+## Atak aralığında saldırılan sensörler (Kafka zamanına göre)
+atak | konum_s | olcum | anomali | anomali_payi_%
+0 | 5 | 5758 | 2995 | 52.0
+1 | 300 | 5562 | 2997 | 53.9
+2 | 570 | 5723 | 3004 | 52.5
+3 | 595 | 5819 | 2998 | 51.5
+
+## Saldırılmayan 190 sensör, tüm deney: 5,419,837 ölçüm, anomali payı %0.298
