@@ -178,6 +178,10 @@ def oran_yigin(df, yigin_id):
         isaretli_once.add((rapor_penceresi(r), r["anahtar"]))
         print(f"⚠ yığın {yigin_id}: {r['anahtar']} normal dışı · pencere {r['pencere_bas']:%H:%M} · oran %{r['deger']} "
               f"({r['anomali_sayisi']}/{r['olcum_sayisi']}) · Kafka'dan {t_bitti - r['son_kafka'].timestamp():.2f} s sonra")
+    if yeni_isaret:                  # bellek sınırlı kalsın: watermark (2 dk) geçince eski rapor penceresine olay gelmez → 30 dk'dan eskiyi at
+        en_yeni = max(k[0] for k in isaretli_once)
+        for k in [k for k in isaretli_once if k[0] < en_yeni - 1800]:
+            isaretli_once.discard(k)
 
 
 sorgular = []
