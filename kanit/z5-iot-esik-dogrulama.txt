@@ -1,0 +1,19 @@
+BSM 461 | Grup B231210065 | Rol A | Z5 iot_esik (K-09a) Doğrulama Kanıtı
+Tarih: 2026-11-28
+Veri: K-15 (--son-gun 2026-11-23, 3.000.000 ham satır, 6.050 tekrar, 14 gün)
+Üretim komutu: docker compose exec -T spark spark-submit is/iot_esik.py --dogrula-stub
+Hedef tablo: s3a://tablolar/iot_esik (Delta Lake)
+Referans stub: s3://islenmis/_stub/iot_esik.parquet (is/akis/esik_stub.py)
+
+Sonuç:
+- Satır sayısı: 504 (7 bölge × 24 saat × 3 ölçü)
+- Üretim süresi: 23.30 sn
+- Şema: bolge (string), saat (int), olcu (string), medyan (double), dss (double)
+- dss aralıkları:
+  * nem      : 2.520 – 2.520 (168 satır)
+  * sicaklik : 0.979 – 1.038 (168 satır)
+  * titresim : 0.049 – 0.052 (168 satır)
+- Stub karşılaştırması:
+  * max |medyan farki| = 0
+  * max |dss farki|    = 0
+  * Durum: ✓ birebir aynı (Delta iot_esik == DuckDB stub)

@@ -1,0 +1,13 @@
+﻿BSM 461 | Grup B231210065 | IoT | Z2 satır kontrolü
+Ham JSONL: 14 dosya, 3.000.000 satır, 430.607.335 bayt
+Temizlenmiş Parquet: 112 dosya, 2.993.970 satır, 45.234.399 bayt
+
+Spark SQL kontrolü:
+SELECT COUNT(*) AS toplam, COUNT(*) - COUNT(to_timestamp(olay_zamani)) AS gecersiz_zaman FROM json.`s3a://ham/iot/`
+Sonuç: 3000000  0
+
+Zaman dönüşümünde elenen: 0 satır
+Tekrar temizliğinde elenen: 6.030 satır (%0,201)
+
+Yorum: Ham JSONL ile temizlenmiş Parquet farklı sayıda satır içeriyor.
+Yalnızca dosya biçiminin etkisini ölçmek için aynı kayıtlar kullanılacak.

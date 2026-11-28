@@ -1,3 +1,4 @@
 ﻿"tarih","kisi","bilesen","olcum","deger","birim","tekrar","veri_boyutu","makine","not"
-"2026-11-23","A","Z2","json_toplam_boyut","430607335","bayt","1","3000000 olay","DESKTOP-FL051RK","S3 ham/iot/tarih= altindaki 14 JSONL nesnesinin Size toplami"
-"2026-11-23","A","Z2","parquet_toplam_boyut","45234399","bayt","1","3000000 ham olay; temizleme sonrasi","DESKTOP-FL051RK","S3 islenmis/iot/ altindaki 112 Parquet dosyasinin Size toplami"
+"2026-11-23","A","Z2","json_toplam_boyut","430607335","bayt","1","3000000 olay","AMD Ryzen 7 8845HS / 32 GiB RAM","S3 ham/iot/tarih= altindaki 14 JSONL nesnesinin Size toplami"
+"2026-11-23","A","Z2","parquet_toplam_boyut","45234399","bayt","1","3000000 ham olay; temizleme sonrasi","AMD Ryzen 7 8845HS / 32 GiB RAM","S3 islenmis/iot/ altindaki 112 Parquet dosyasinin Size toplami"
+"2026-11-24","A","Z2","temiz_json_toplam_boyut","396770223","bayt","1","2993970 temiz kayit","AMD Ryzen 7 8845HS / 32 GiB RAM","Sikistirmasiz JSON; ayni kayitlarla Parquet 45234399 bayt; oran 8.77"
