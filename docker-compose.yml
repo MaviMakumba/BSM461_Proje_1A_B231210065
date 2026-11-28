@@ -33,6 +33,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1     # tek düğüm → tek kopya (raporda tartışın!)
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: /var/lib/kafka/data           # konular aşağıdaki kafka-veri biriminde; down/up sonrası durur
       KAFKA_HEAP_OPTS: "-Xms512m -Xmx512m"
       JAVA_TOOL_OPTIONS: "-XX:+IgnoreUnrecognizedVMOptions -XX:UseSVE=0"   # Apple M4 Mac çökmesine karşı (README)
     volumes:
@@ -105,6 +106,8 @@ services:
     image: bsm461-araclar:2
     container_name: bsm461-araclar
     command: ["sleep", "infinity"]
+    ports:
+      - "8000:8000"
     working_dir: /kit
     volumes:
       - .:/kit

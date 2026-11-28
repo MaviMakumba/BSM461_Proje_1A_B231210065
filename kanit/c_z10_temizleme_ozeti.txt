@@ -1,0 +1,12 @@
+﻿=== Z10 VERİ TEMİZLEME VE ZENGİNLEŞTİRME ÖZETİ (SPARK 3.5) ===
+1. Ham giriş kaydı (s3://ham/iot)          : 3,000,000
+2. Silinen tam tekrar (duplicate)          : -6,030 (%0.201)
+3. Karantinaya alınan eksik/hatalı kayıt   : -6,038 (%0.201)
+4. Temiz + zenginleştirilmiş (s3://islenmis): 2,987,932 (%99.598)
+   └─ İçindeki uç değer (anomali) işaretli : 9,277 (%0.310)
+Toplam çalışma süresi (okuma+temiz+yazma)  : 35.60 s
+
+--- Depolama Biçimi Karşılaştırması (JSONL vs Parquet) ---
+Ham JSONL boyutu (14 dosya)    : 410.66 MB (DuckDB okuma: 1.75 s)
+Temiz Parquet boyutu (14 gün)  : 77.14 MB (2,987,932 satır, DuckDB okuma: 0.19 s)
+Disk sıkıştırma kazancı        : %81.2 daha az yer

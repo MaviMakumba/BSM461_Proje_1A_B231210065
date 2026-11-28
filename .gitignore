@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .DS_Store
 spark-warehouse/
+
+# büyük ham ölçüm kayıtları (özeti kanit/ altında; betikle yeniden üretilir)
+kanit/b3/*-ham.csv
+kanit/b3/.hazir-*

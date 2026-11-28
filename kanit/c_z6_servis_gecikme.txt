@@ -1,0 +1,10 @@
+=== Z6 SERVİS DEPOSU (MONGODB 7.0) YÜKLEME VE GECİKME ÖLÇÜMÜ ===
+Veritabanı / Koleksiyonlar : bsm461 -> sensor_ozet (200), bolge_saat_ozet (168), akis_a1_anomali (2000)
+S3 Parquet -> MongoDB yükleme + indeksleme süresi : 1.53 s
+Oluşturulan indeksler : sensor_id (unique), (bolge, anomali_sayisi), (bolge, saat), (esik_asildi, pencere_bit)
+
+--- Z6 Sorgu Gecikmesi (N = 1,000 karışık okuma sorgusu) ---
+p50 (ortanca) gecikme : 0.27 ms
+p95 gecikme           : 0.37 ms
+p99 gecikme           : 0.46 ms   (Senaryo hedefi: <= 2000 ms -> BAŞARILI ✅)
+En yüksek (max)       : 1.60 ms

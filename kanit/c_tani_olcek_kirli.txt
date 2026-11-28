@@ -1,0 +1,66 @@
+=== 1. HAM VERİ VE SÖZLEŞME ÖZETİ (ADIM 3) ===
+Dosya sayısı : 14 · Toplam boyut: 410.66 MB (430,607,335 bayt)
+Toplam kayıt : 3,000,000 · Olay başı JSON: 143.54 bayt · DuckDB okuma: 1.75 s
+
+Ham Olay Sütunları (s3://ham/iot/*/*.jsonl):
+  Alan               Tip                  Dolu     Boş/Null   Farklı Değer
+  olay_zamani        VARCHAR         3,000,000            0      2,990,242
+  sensor_id          VARCHAR         2,998,807        1,193            200
+  bolge              VARCHAR         2,998,777        1,223              7
+  sicaklik           DOUBLE          2,998,831        1,169          6,418
+  nem                DOUBLE          2,998,775        1,225            429
+  titresim           DOUBLE          2,998,758        1,242          2,914
+  tarih              DATE            3,000,000            0             14
+
+Boyut Tablosu Sütunları (sensorler.csv):
+  sensor_id (VARCHAR)
+  bolge (VARCHAR)
+  model (VARCHAR)
+  kurulum_yili (BIGINT)
+
+Örnek 5 Satır (Ham Veri):
+  {'olay_zamani': '2026-11-11T11:29:31.672Z', 'sensor_id': 'sensor-196', 'bolge': 'Marmara', 'sicaklik': 26.29, 'nem': 44.0, 'titresim': 0.19, 'tarih': datetime.date(2026, 11, 11)}
+  {'olay_zamani': '2026-11-22T08:40:42.796Z', 'sensor_id': 'sensor-084', 'bolge': 'Marmara', 'sicaklik': 25.14, 'nem': 47.9, 'titresim': 0.071, 'tarih': datetime.date(2026, 11, 22)}
+  {'olay_zamani': '2026-11-12T12:33:03.473Z', 'sensor_id': 'sensor-091', 'bolge': 'Marmara', 'sicaklik': 25.68, 'nem': 45.7, 'titresim': 0.283, 'tarih': datetime.date(2026, 11, 12)}
+  {'olay_zamani': '2026-11-20T17:31:39.647Z', 'sensor_id': 'sensor-011', 'bolge': 'Karadeniz', 'sicaklik': 16.32, 'nem': 57.3, 'titresim': 0.234, 'tarih': datetime.date(2026, 11, 20)}
+  {'olay_zamani': '2026-11-16T08:52:14.867Z', 'sensor_id': 'sensor-011', 'bolge': 'Karadeniz', 'sicaklik': 16.06, 'nem': 63.4, 'titresim': 0.303, 'tarih': datetime.date(2026, 11, 16)}
+
+=== 2. Z1 ÖLÇEK VE EŞİK HESABI (SENARYO KARTI) ===
+Varsayımlar      : 2,000 ölçüm/s ort. · Tepe x2 · 30 gün saklama · 1 kopya ham
+Günlük olay      : 172,800,000 olay/gün
+Günlük ham hacim : 23.10 GB/gün
+30 günlük ham    : 692.99 GB (3 kopya S3/HDFS ile 2078.96 GB)
+Tepe yük hızı    : 4,000 olay/s (~4.59 Mbps)
+
+=== 3. Z10 KİRLİ VERİ SAYIMI ===
+Tamamen aynı (tekrar) satır : 6,030 (%0.201)
+=== 4. Z10 DETAYLI KİRLİ KAYIT DÖKÜMÜ ===
+  1. Tam tekrar satır (duplicate)                         :      6,030 (%0.201)
+  2. Eksik anahtar (sensor_id IS NULL)                    :      1,193 (%0.040)
+  3. Eksik bölge (bolge IS NULL)                          :      1,223 (%0.041)
+  4. Eksik ölçüm (sicaklik/nem/titresim NULL)             :      3,636 (%0.121)
+  5. Fiziksel sınır dışı sıcaklık (<-50 veya >100 °C)     :          0 (%0.000)
+  6. Fiziksel sınır dışı nem (<0 veya >100 %)             :          0 (%0.000)
+  7. Fiziksel sınır dışı titreşim (<0)                    :          0 (%0.000)
+  8. Bozuk/gelecek olay_zamani (TRY_CAST NULL veya >2026-11-24) :          0 (%0.000)
+  9. Boyut tablosunda olmayan sensor_id                   :          0 (%0.000)
+  10. Bölge uyuşmazlığı (olay.bolge != sensor.bolge)      :          0 (%0.000)
+  Tekil kirli kayıt (en az 1 kural ihlali, tekrar hariç)  :      6,052 (%0.202)
+
+=== 5. DAĞILIM VE ÇARPIKLIK ÖZETİ (Z3 ÖN İNCELEME) ===
+Bölge bazlı satır dağılımı:
+  Karadeniz       :    436,605 (%14.55)
+  Akdeniz         :    436,158 (%14.54)
+  İç Anadolu      :    435,379 (%14.51)
+  Ege             :    434,978 (%14.50)
+  Marmara         :    419,758 (%13.99)
+  Doğu Anadolu    :    419,292 (%13.98)
+  Güneydoğu       :    416,607 (%13.89)
+  NULL            :      1,223 (%0.04)
+
+En yoğun 5 sensör:
+  sensor-163      :     15,846 (%0.53)
+  sensor-105      :     15,718 (%0.52)
+  sensor-191      :     15,695 (%0.52)
+  sensor-108      :     15,686 (%0.52)
+  sensor-054      :     15,659 (%0.52)

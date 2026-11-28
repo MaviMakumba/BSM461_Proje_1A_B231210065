@@ -1,0 +1,15 @@
+→ Kafka 'sensorler' · acks=all · idempotent=açık
+→ Kafka 'sensorler' konusuna saniyede ~2000 olay · geç oranı 0.15 (en fazla 2 dk) · Ctrl+C ile dur
+  1.947 olay gönderildi
+  21.402 olay gönderildi
+  40.853 olay gönderildi
+  60.326 olay gönderildi
+  81.713 olay gönderildi
+  101.189 olay gönderildi
+  120.668 olay gönderildi
+  140.100 olay gönderildi
+  161.468 olay gönderildi
+  180.954 olay gönderildi
+  200.443 olay gönderildi
+  221.872 olay gönderildi
+✓ toplam 233.518 olay

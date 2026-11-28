@@ -1,0 +1,10 @@
+=== Z3 SICAK NOKTA (SKEW) VE TUZLAMA ÖLÇÜMÜ (SPARK 3.5) ===
+Toplam geçerli sensör anahtarı : 200
+Sensör başı olay (en az / ortanca / en çok) : 10,774 / 15,373 / 15,846
+Çarpıklık oranı (en çok / ortanca)          : 1.03x
+En yoğun 3 sensör : [('sensor-163', 15846), ('sensor-105', 15718), ('sensor-191', 15695)]
+
+--- Performans Karşılaştırması (3M Satır, AQE Kapalı, 16 Shuffle Bölümü) ---
+Tuzlamasız (Standart groupBy + join) süresi : 1.52 s (200 satır)
+Tuzlamalı  (N=10 iki aşamalı + join) süresi : 1.44 s (200 satır)
+Fark / Yorum : -0.08 s

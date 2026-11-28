@@ -1,0 +1,24 @@
+# B1 · 24 Kas 2026 · uretici --hiz 20 --sure 60 · konsol tüketici (bölüm 0'ın ilk 20 mesajı)
+# biçim: CreateTime(ms) · bölüm · ofset · anahtar · değer
+CreateTime:1795543998268	Partition:0	Offset:0	sensor-012	{"olay_zamani": "2026-11-24T18:13:18.267Z", "sensor_id": "sensor-012", "bolge": "Doğu Anadolu", "sicaklik": 10.31, "nem": 61.7, "titresim": 0.171}
+CreateTime:1795543998268	Partition:0	Offset:1	sensor-163	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-163", "bolge": "Akdeniz", "sicaklik": 28.44, "nem": 47.6, "titresim": 0.252}
+CreateTime:1795543998268	Partition:0	Offset:2	sensor-185	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-185", "bolge": "İç Anadolu", "sicaklik": 14.82, "nem": 60.0, "titresim": 0.188}
+CreateTime:1795543998268	Partition:0	Offset:3	sensor-062	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-062", "bolge": "Güneydoğu", "sicaklik": 29.63, "nem": 44.8, "titresim": 0.197}
+CreateTime:1795543998268	Partition:0	Offset:4	sensor-192	{"olay_zamani": "2026-11-24T18:11:24.013Z", "sensor_id": "sensor-192", "bolge": "İç Anadolu", "sicaklik": 16.68, "nem": 54.7, "titresim": 0.117}
+CreateTime:1795543998268	Partition:0	Offset:5	sensor-092	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-092", "bolge": "Ege", "sicaklik": 23.81, "nem": 53.4, "titresim": 0.2}
+CreateTime:1795543998268	Partition:0	Offset:6	sensor-195	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-195", "bolge": "Güneydoğu", "sicaklik": 28.73, "nem": 53.5, "titresim": 0.238}
+CreateTime:1795543998268	Partition:0	Offset:7	sensor-039	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-039", "bolge": "Karadeniz", "sicaklik": 15.14, "nem": 63.1, "titresim": 0.174}
+CreateTime:1795543998268	Partition:0	Offset:8	sensor-177	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-177", "bolge": "Akdeniz", "sicaklik": 29.94, "nem": 43.5, "titresim": 0.221}
+CreateTime:1795543998268	Partition:0	Offset:9	sensor-189	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-189", "bolge": "Marmara", "sicaklik": 23.71, "nem": 47.0, "titresim": 0.266}
+CreateTime:1795543998268	Partition:0	Offset:10	sensor-039	{"olay_zamani": "2026-11-24T18:13:18.268Z", "sensor_id": "sensor-039", "bolge": "Karadeniz", "sicaklik": 14.7, "nem": 58.6, "titresim": 0.248}
+CreateTime:1795543999269	Partition:0	Offset:11	sensor-007	{"olay_zamani": "2026-11-24T18:13:19.269Z", "sensor_id": "sensor-007", "bolge": "Marmara", "sicaklik": 23.48, "nem": 47.7, "titresim": 0.195}
+CreateTime:1795543999269	Partition:0	Offset:12	sensor-077	{"olay_zamani": "2026-11-24T18:13:19.269Z", "sensor_id": "sensor-077", "bolge": "Marmara", "sicaklik": 22.17, "nem": 48.7, "titresim": 0.098}
+CreateTime:1795543999269	Partition:0	Offset:13	sensor-017	{"olay_zamani": "2026-11-24T18:13:19.269Z", "sensor_id": "sensor-017", "bolge": "İç Anadolu", "sicaklik": 16.43, "nem": 56.9, "titresim": 0.117}
+CreateTime:1795543999269	Partition:0	Offset:14	sensor-092	{"olay_zamani": "2026-11-24T18:13:19.269Z", "sensor_id": "sensor-092", "bolge": "Ege", "sicaklik": 22.99, "nem": 49.1, "titresim": 0.171}
+CreateTime:1795544000269	Partition:0	Offset:15	sensor-047	{"olay_zamani": "2026-11-24T18:12:15.993Z", "sensor_id": "sensor-047", "bolge": "Doğu Anadolu", "sicaklik": 12.29, "nem": 61.7, "titresim": 0.229}
+CreateTime:1795544000269	Partition:0	Offset:16	sensor-062	{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-062", "bolge": "Güneydoğu", "sicaklik": 27.32, "nem": 47.8, "titresim": 0.197}
+CreateTime:1795544000269	Partition:0	Offset:17	sensor-014	{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-014", "bolge": "Marmara", "sicaklik": 21.9, "nem": 48.8, "titresim": 0.148}
+CreateTime:1795544000269	Partition:0	Offset:18	sensor-132	{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-132", "bolge": "Güneydoğu", "sicaklik": 29.05, "nem": 47.3, "titresim": 0.18}
+CreateTime:1795544000269	Partition:0	Offset:19	sensor-014	{"olay_zamani": "2026-11-24T18:13:20.269Z", "sensor_id": "sensor-014", "bolge": "Marmara", "sicaklik": 22.57, "nem": 49.2, "titresim": 0.222}
+
+# Geç olay örnekleri (ofset 4: ~114 s, ofset 15: ~64 s geç) yukarıda; tekrar ve kirli örnekleri kafka-kesif-ozet.txt'de
