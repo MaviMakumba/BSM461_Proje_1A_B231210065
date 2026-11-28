@@ -1,0 +1,10 @@
+# 28 Kas 2026 — C'nin Z10 sayıları ile B'nin verisi neden tutmuyor? (asistan ölçümü, Eren'in makinesi)
+B (bu makine, üretim 24 Kas, tarih=2026-11-10..23):
+  ham bayt 430.604.846 · 14 dosya · 3.000.000 satır
+  birebir tekrar fazlası: DuckDB count(DISTINCT) 6.050 · DuckDB SELECT DISTINCT * 6.050 · Spark dropDuplicates() 6.050 · Spark text distinct 6.050
+  C'nin geçerlilik kuralıyla karantina (tekrar ayıklandıktan sonra): 6.038 · tekil 2.993.950 → temiz 2.987.912
+C (kanit/c_tani_olcek_kirli.txt): ham bayt 430.607.335 · tekrar 6.030 · sensor_id boş 1.193 (B: 1.215) · temiz 2.987.932
+C'nin örnek satırları ('2026-11-11T11:29:31.672Z', '2026-11-22T08:40:42.796Z') B'nin verisinde YOK (0 satır).
+Kök neden: araclar/uretici.py toplu() bitiş tarihini datetime.now() ile alıyor (satır 315). Aynı --grup, farklı gün →
+gün ağırlıkları (haftanın günü) farklı → rastgele dizi farklı yerlerde tüketiliyor → veri farklı. "Aynı kod = aynı veri"
+ancak AYNI GÜN üretilirse doğru. Yöntem farkı yok: Spark ve DuckDB aynı veride aynı sayıyı veriyor.

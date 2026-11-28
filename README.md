@@ -97,7 +97,7 @@ Beklenen çıktı:
 | `kafka` | Olay günlüğü — Kafka 4.0, ZooKeeper'sız (KRaft), tek düğüm | `localhost:9092` | H10 |
 | `s3` | S3 uyumlu nesne deposu (SeaweedFS); kovalar `ham`, `islenmis`, `tablolar` | `http://localhost:8333` | H4 |
 | `spark` | Spark 3.5 tezgâhı: toplu ve akış işleri buradan çalışır; Kafka, S3 ve Delta Lake hazır | Spark UI: `http://localhost:4040` (iş çalışırken) | H6, H7, H9, H11 |
-| `araclar` | Python araçları: veri üretici, doğrulama, DuckDB, arama örneği | — | — |
+| `araclar` | Python araçları: veri üretici, doğrulama, DuckDB, arama örneği; ekibin panosu (`servis/pano_api.py`) | Pano: `http://localhost:8000` (ekip eklemesi) | — |
 | `elasticsearch` | Arama ve log analitiği (`--profile arama`) | `http://localhost:9200` | H8 |
 | `kibana` | Pano (`--profile pano`, isteğe bağlı; Elasticsearch'i de açar — Kibana yalnızca oradaki veriyi gösterir) | `http://localhost:5601` | H8 |
 | `mongo` | Servis deposu örneği: MongoDB 7 (`--profile servis`, isteğe bağlı) | `mongodb://localhost:27017` | H8 |
@@ -262,3 +262,20 @@ Kit **tek bilgisayarda** çalışmak için sadeleştirildi. Gerçek bir sistemde
 - Spark `local[*]` kipinde: sürücü ve yürütücüler aynı süreçte; gerçek küme yok (H6).
 - Elasticsearch **tek düğüm, replika 0**: küme sarı ya da yeşil görünür, ama kopyası yoktur (H8, H3).
 - Güvenlik **kapalı**: şifre ve TLS yok. Asla internete açık bir makinede böyle çalıştırmayın.
+
+## Kitten farklarımız (Grup B231210065 · Şablon 3 IoT)
+
+Kiti olduğu gibi kullanıyoruz; aşağıdaki değişiklikler dışında. Her birinin gerekçesi karar defterinde.
+
+| Değişiklik | Neden | Karar |
+|---|---|---|
+| Hocanın 24 Kas güncellemesi (`KAFKA_LOG_DIRS`) alındı | Konteyner yeniden yaratılınca Kafka konuları kayboluyordu | `notlar/B/B-karar-defteri.md` K-01 |
+| S3 healthcheck `localhost` → `s3` | SeaweedFS yalnızca IPv4 dinliyor, konteynerde `localhost` önce IPv6'ya (`::1`) çözülüyor → `unhealthy` | K-02 |
+| `araclar` servisine `8000:8000` portu | Ekip panosu ve REST API (`servis/pano_api.py`) | `notlar/C/C-karar-defteri.md` |
+| `uretici.py --son-gun YYYY-AA-GG` seçeneği | Toplu verinin günleri "bugünden geriye" sayılıyordu → aynı `--grup` farklı günde farklı veri üretiyordu. Varsayılan davranış değişmedi | K-15 |
+
+**Projedeki tüm sayıların üretildiği toplu veri** (her makinede, her gün aynı veri — 24 Kas üretimiyle birebir aynı olduğu sha256 ile doğrulandı):
+
+```bash
+docker compose exec araclar python araclar/uretici.py --grup B231210065 --sablon iot --toplu 3000000 --gun 14 --son-gun 2026-11-23
+```

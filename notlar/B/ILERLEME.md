@@ -19,7 +19,10 @@
 | B9 | Gösterim + README | 60–90 sn ekran kaydı; sıfırdan çalışan README; Z0 okları | 7 Ara | ☐ |
 | B10 | Rapor | bölüm 8 (+3, 11 katkısı), YZ günlüğü, soru bankası | **8 Ara** | ☐ |
 
-## ▶ Sonraki oturum buradan başlar (25 Kas sonu)
+## ▶ Sonraki oturum buradan başlar (28 Kas sonu)
+0. **28 Kas yapılanlar:** C'nin PR #3–4'ü rol-b'ye alındı. Veri farkı çözüldü → **K-15** (`uretici.py --son-gun 2026-11-23`, sha256 14/14 aynı).
+   **K-16** (A1/A2'ye `bolge`). Eşik stub'ı tekrar ayıklama hatası düzeltildi (etki ölçüldü, anomali sayısı değişmedi). README "Kitten farklarımız".
+   Kanıt `kanit/b5/c-veri-farki.txt`. ✅ Eren onayladı; rol-b → main PR ile alındı. **Ekip mesajı** (aşağıda "28 Kas ekip mesajı") Eren tarafından gönderilecek.
 1. ✅ Duman testi (25 Kas, `--min-sicrama 12`, 40 s, 77.927 olay, 21 yığın, 200 sensör): hata yok, ⚠ 0, en yüksek sıçrama 5.
    Kanıt `kanit/b3/a1-k09c-duman.log`.
 2. **Enjeksiyon aracı (K-09d):** `is/olcum/b3_ariza_enjeksiyonu.py` yaz.
@@ -30,17 +33,21 @@
      (atak başı → ⚠), yanlış alarm. Sonuç → `B.csv`, `kanit/b3/enjeksiyon-*.txt`, defter K-09d, sunum §6.4–6.5.
 3. Pencere sonunda tespit > 5 s çıkarsa **K-09e** kararı: kısa pencere (1–2 dk) / kayan pencere / son-X-ölçüm oranı → Eren'e sun.
 4. B3'ü kapat → **B4 (A2 susan sensör)**: sensör başına gönderim aralığını veriden ölç, K-10.
-5. Unutma: ekibe iletilecekler (aşağıda) henüz gönderilmedi; `rol-b → main` PR'ı henüz açılmadı (B5'te C'den önce açılmalı, son tarih 2 Ara).
+5. ✅ 25 Kas: B0–B3 main'e alındı (PR #2, merge 67d243d); A ve C için notlar PR açıklamasında. Bundan sonra her bölüm sonunda rol-b → main PR + merge.
 
 ## B0 alt adımları
 - [x] Depo klonlandı, `rol-b` dalı açıldı
 - [x] Hocanın 24 Kas kit güncellemesi (`KAFKA_LOG_DIRS`) compose'a alındı → K-01
 - [x] Karar defteri + ilerleme dosyası + YZ günlüğü açıldı
 - [x] Kit ayağa kalktı (24 Kas): `dogrula.py` çekirdek ✅, `dogrula_spark.py` ✅ (Parquet, Delta, Kafka); Kafka `log.dirs=/var/lib/kafka/data` doğrulandı
-- [ ] README'ye "kitten farklar" bölümü (K-01, K-02)
+- [x] README'ye "kitten farklar" bölümü (K-01, K-02, K-15, port 8000) — 28 Kas
 - [x] T1/T2 kesinleşti (A) → K-03 · [ ] A1/A2 ekibe önerildi, onay bekleniyor
 
 ## Ekibe iletilecekler
+- **28 Kas ekip mesajı (gönderilecek):**
+  - Herkese K-15 (veri `--son-gun 2026-11-23` ile yeniden üretilecek; kontrol: üretici "6.050 tekrar" yazmalı).
+  - C'ye istekler: `delta_scan`, `ORDER BY`, `bolge` geliyor/`model` sende, anomali adı, hata günlüğü, p99 sabit yazı.
+  - A'ya sorular: veri günü, `iot_esik` tarihi (1 Ara'ya kadar gelmezse B yazar), T2 tanımı.
 - **A:** PR #1 merge edildi. Notlar: (1) Parquet "temizleme sonrası" ölçülmüş, JSON ham → satır sayısı farklı,
   oran böyle savunulamaz; (2) 112 dosya, ort. ~0,40 MB → küçük dosya (Z4 malzemesi); (3) `makine` sütununa
   donanım yazılmalı (hostname değil); (4) CSV BOM'lu ve tırnaklı.
